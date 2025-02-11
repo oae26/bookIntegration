@@ -3,6 +3,8 @@
 
 $mydb = new mysqli('127.0.0.1','testUser','12345','testdb');
 
+
+
 if ($mydb->errno != 0)
 {
 	echo "failed to connect to database: ". $mydb->error . PHP_EOL;
@@ -11,9 +13,19 @@ if ($mydb->errno != 0)
 
 echo "successfully connected to database".PHP_EOL;
 
-$query = "select * from students;";
+$query = "select * from users;";
 
-$response = $mydb->query($query);
+
+
+if ($response = $mydb->query($query)){
+	while($row = $response -> fetch_row()){
+	$db_username = $row[1];
+	$db_password = $row[2];
+	printf( $db_password);
+	printf($db_username);
+	}
+}
+
 if ($mydb->errno != 0)
 {
 	echo "failed to execute query:".PHP_EOL;
