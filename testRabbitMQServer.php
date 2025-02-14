@@ -3,14 +3,22 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('mysqlconnect.php');
+require('mysqlconnect.php');
+
+
+
 function doLogin($username,$password)
 {
+	global $db_username;
+	global $db_password;
+
+
 	if($username == $db_username && $password == $db_password){
 	return true;
 	} 
 	else{
 	return "ERROR: incorrect credentials";
+
 	}
 
 }

@@ -21,17 +21,16 @@ if ($response = $mydb->query($query)){
 	while($row = $response -> fetch_row()){
 	$db_username = $row[1];
 	$db_password = $row[2];
-	printf( $db_password);
-	printf($db_username);
+
 	}
 }
-
 if ($mydb->errno != 0)
 {
 	echo "failed to execute query:".PHP_EOL;
 	echo __FILE__.':'.__LINE__.":error: ".$mydb->error.PHP_EOL;
 	exit(0);
 }
-
+return($db_username);
+return($db_password);
 
 ?>
