@@ -8,8 +8,12 @@ function HandleLoginResponse(response)
 	document.getElementById("textResponse").innerHTML = "response: "+text+"<p>";
 }
 
-function SendLoginRequest(username,password)
-{
+function SendLoginRequest(event)
+{	
+	event.preventDefault();
+	var username = document.getElementById("username");
+	var password = document.getElementById("password");
+
 	var request = new XMLHttpRequest();
 	request.open("POST","login.php",true);
 	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
@@ -25,13 +29,17 @@ function SendLoginRequest(username,password)
 }
 </script>
 
-<h1>login page</h1>
+<h1>login thing</h1>
 <body>
+<form onsubmit="SendLoginRequest(event)">
+<input type="text" id="username" value="username">
+<input type="text" id="password" value="password">
+<input type="submit">
+</form>
 <div id="textResponse">
-awaiting response
+Enter your credentials here and login!
 </div>
 <script>
-SendLoginRequest("kehoed","12345");
 </script>
 </body>
 </html>

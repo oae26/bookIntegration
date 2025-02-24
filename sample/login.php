@@ -12,7 +12,7 @@ $response = "unsupported request type, politely FUCK OFF";
 switch ($request["type"])
 {
 	case "login":
-		$response = "login, yeah we can do that";
+		$response = "successfully logged in, yeah we CAN PROBABLY do that";
 	break;
 }
 echo json_encode($response);
