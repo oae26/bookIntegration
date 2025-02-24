@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$mydb = new mysqli('127.0.0.1','testUser','12345','testdb');
+$mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
 
 
 
@@ -21,7 +21,7 @@ if ($response = $mydb->query($query)){
 	while($row = $response -> fetch_row()){
 	$db_username = $row[1];
 	$db_password = $row[2];
-
+	echo "user: " . $db_username . ", password: " . $db_password . PHP_EOL;
 	}
 }
 if ($mydb->errno != 0)
