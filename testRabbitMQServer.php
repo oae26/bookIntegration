@@ -33,7 +33,7 @@ function requestProcessor($request)
   }
   switch ($request['type'])
   {
-    case "login":
+    case "Login":
       return doLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
