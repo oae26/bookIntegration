@@ -3,6 +3,7 @@
 
 function HandleLoginResponse(response)
 {
+	console.log(response)
 	var text = JSON.parse(response);
 //	document.getElementById("textResponse").innerHTML = response+"<p>";	
 	document.getElementById("textResponse").innerHTML = "response: "+text+"<p>";
@@ -11,9 +12,8 @@ function HandleLoginResponse(response)
 function SendLoginRequest(event)
 {	
 	event.preventDefault();
-	var username = document.getElementById("username");
-	var password = document.getElementById("password");
-
+	var username = document.getElementById("username").value;
+	var password = document.getElementById("password").value;
 	var request = new XMLHttpRequest();
 	request.open("POST","login.php",true);
 	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
@@ -25,15 +25,15 @@ function SendLoginRequest(event)
 			HandleLoginResponse(this.responseText);
 		}		
 	}
-	request.send("type=login&uname="+username+"&pword="+password);
+	request.send("type=login&username="+username+"&password="+password);
 }
 </script>
 
-<h1>login thing</h1>
+<h1>login </h1>
 <body>
 <form onsubmit="SendLoginRequest(event)">
-<input type="text" id="username" value="username">
-<input type="text" id="password" value="password">
+<input type="text" id="username" placeholder="username...">
+<input type="text" id="password" placeholder="password...">
 <input type="submit">
 </form>
 <div id="textResponse">
