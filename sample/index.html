@@ -1,12 +1,52 @@
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 <html>
+	<script>
+	</script>
 <script>
-
+	let cookie = null;
 function HandleLoginResponse(response)
 {
+
 	console.log(response);	
-	var text = JSON.parse(response);
+	var decoded = jwt_decode(response);
+	console.log(decoded);
+	var text = decoded;
+	cookie = decoded;
+	
 //	document.getElementById("textResponse").innerHTML = response+"<p>";	
 	document.getElementById("textResponse").innerHTML = "response: "+text+"<p>";
+	document.getElementById("logoutButton").innerHTML = "logout";
+	document.getElementById("validateButton").innerHTML = "validate Session";
+	}
+	// else{
+	// 	document.getElementById("textResponse").innerHTML = "response: invalide credentials <p>";
+		
+	// }
+
+function handleValidateResponse(response){
+	response = JSON.parse(response);
+	if(response.returnCode == "0"){
+		document.getElementById("textResponse").innerHTML = "we're validated";
+}	else{
+	document.getElementById("textResponse").innerHTML = "we can't vlaidate";
+	
+}
+}
+function HandleRegisterResponse(response){
+	response = JSON.parse(response);
+	console.log(response);	
+	if(response.returnCode == "0"){
+		document.getElementById("textResponse").innerHTML = "we're regiistered";
+}	
+else{
+	document.getElementById("textResponse").innerHTML = response.messsage;
+}
+}
+	
+
+
+function handleLogoutResponse(response){
+	console.log(response);
 }
 
 function SendLoginRequest(event)
@@ -23,10 +63,73 @@ function SendLoginRequest(event)
 		if ((this.readyState == 4)&&(this.status == 200))
 		{
 			HandleLoginResponse(this.responseText);
+		
+
 		}		
 	}
 	request.send("type=login&username="+username+"&password="+password);
 }
+function SendLogoutRequest(event)
+{	
+	event.preventDefault();
+	var username = cookie.username;
+	var ID = parseInt(cookie.sessionKey);
+	var request = new XMLHttpRequest();
+	request.open("POST","login.php",true);
+	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	request.onreadystatechange= function ()
+	{
+				
+		if ((this.readyState == 4)&&(this.status == 200))
+		{
+			handleLogoutResponse(this.responseText);
+
+
+		}		
+	}
+	request.send("type=logout&username="+username+"&sessionKey="+ID);
+}
+function SendValidateRequest(event)
+{	
+	event.preventDefault();
+	var username = cookie.username;
+	var ID = cookie.sessionKey;
+	var request = new XMLHttpRequest();
+	request.open("POST","login.php",true);
+	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	request.onreadystatechange= function ()
+	{
+				
+		if ((this.readyState == 4)&&(this.status == 200))
+		{
+			handleValidateResponse(this.responseText);
+			console.log(this.responseText);
+
+		}		
+	}
+	request.send("type=validate_session&username="+username+"&sessionKey="+ID);
+}
+function SendRegisterRequest(event)
+{	
+	event.preventDefault();
+	var username = document.getElementById("username2").value;
+	var password = document.getElementById("password2").value;
+	var request = new XMLHttpRequest();
+	request.open("POST","login.php",true);
+	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	request.onreadystatechange= function ()
+	{
+		
+		if ((this.readyState == 4)&&(this.status == 200))
+		{
+			HandleRegisterResponse(this.responseText);
+		
+
+		}		
+	}
+	request.send("type=register&username="+username+"&password="+password);
+}
+
 </script>
 
 <h1>login </h1>
@@ -34,11 +137,19 @@ function SendLoginRequest(event)
 <form onsubmit="SendLoginRequest(event)">
 <input type="text" id="username" placeholder="username...">
 <input type="text" id="password" placeholder="password...">
-<input type="submit">
+<input type="submit" id="login" placeholder="Login">
 </form>
+<form onsubmit="SendRegisterRequest(event)">
+	<h1> register</h1>
+	<input type="text" id="username2" placeholder="username...">
+	<input type="text" id="password2" placeholder="password...">
+	<input type="submit" id="login" placeholder="Login">
+	</form>
 <div id="textResponse">
 Enter your credentials here and login!
 </div>
+<button id="logoutButton" onclick="SendLogoutRequest(event)"></button>
+<button id="validateButton" onclick="SendValidateRequest(event)"></button>
 <script>
 </script>
 </body>
