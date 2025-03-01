@@ -32,10 +32,7 @@ switch ($request["type"])
 	$RMQrequest['password'] = $password;
 	$RMQresponse = $client -> send_request($RMQrequest);
 	}
-	
-	$json = json_encode($RMQresponse);
-	var_dump($json);
-	return($json);
+	echo json_encode($RMQresponse);
 	exit(0);
 
 ?>
