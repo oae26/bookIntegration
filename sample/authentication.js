@@ -1,6 +1,7 @@
 
 
 let cookie;
+let isLoggedIn = false;
 const loginForm = document.getElementById("loginForm");
 const registrationForm = document.getElementById("registrationForm");
 const logoutButton = document.getElementById("logoutButton");
@@ -19,6 +20,14 @@ if (logoutButton) {
 
 if (validateButton) {
     validateButton.addEventListener('click', SendValidateRequest);
+}
+window.onload = function(){
+	console.log(window.location.pathname);
+	console.log(isLoggedIn);
+	if(window.location.pathname == "/home.html" && isLoggedIn === false){
+		alert("not logged in, redirecting you to the home page.");
+		window.location.href='./index.html'
+	}
 }
 
 async function SendLoginRequest(event)
@@ -112,6 +121,10 @@ async function SendValidateRequest(event)
 		
 
 		}
+		else{
+			alert("Not Validated, redirecting to home page");
+			window.location.href="./index.html";
+		}
 }
 
 async function HandleLoginResponse(response)
@@ -124,6 +137,7 @@ async function HandleLoginResponse(response)
 	window.location.href="./home.html";
 	sessionStorage.setItem("cookie", JSON.stringify(decodedResponse));
 	console.log(JSON.parse(sessionStorage.getItem("cookie")));
+	isLoggedIn = true;
 }
 	// else{
 	// 	document.getElementById("textResponse").innerHTML = "response: invalide credentials <p>";
