@@ -1,7 +1,6 @@
 
 
 let cookie;
-let isLoggedIn = false;
 const loginForm = document.getElementById("loginForm");
 const registrationForm = document.getElementById("registrationForm");
 const logoutButton = document.getElementById("logoutButton");
@@ -21,21 +20,13 @@ if (logoutButton) {
 if (validateButton) {
     validateButton.addEventListener('click', SendValidateRequest);
 }
-window.onload = function(){
-	console.log(window.location.pathname);
-	console.log(isLoggedIn);
-	if(window.location.pathname == "/home.html" && isLoggedIn === false){
-		alert("not logged in, redirecting you to the home page.");
-		window.location.href='./index.html'
-	}
-}
 
 async function SendLoginRequest(event)
 {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
 	event.preventDefault();
-	let response = await fetch('./login.php',{
+	let response = await fetch('./authentication.php',{
 	headers:{"Content-Type":"application/x-www-form-urlencoded"},
 	method:"POST",
 	body:"type=login&username="+
@@ -47,7 +38,7 @@ async function SendLoginRequest(event)
 		{
 			const responseText = await response.text();
 			HandleLoginResponse(responseText);
-
+			
 
 		}		
 
@@ -59,7 +50,7 @@ async function SendLoginRequest(event)
 	var username = document.getElementById("username2").value;
 	var password = document.getElementById("password2").value;
 	event.preventDefault();
-	let response = await fetch('./login.php',{
+	let response = await fetch('./authentication.php',{
 	headers:{"Content-Type":"application/x-www-form-urlencoded"},
 	method:"POST",
 	body:"type=register&username="+
@@ -83,7 +74,7 @@ async function SendLogoutRequest(event)
 	var username = cookie.username;
 	var ID = cookie.sessionKey;
 	event.preventDefault();
-	let response = await fetch("./login.php",{
+	let response = await fetch("./authentication.php",{
 		headers:{"Content-Type":"application/x-www-form-urlencoded"},
 		method:"POST",
 		body:"type=logout&username="+
@@ -96,6 +87,10 @@ async function SendLogoutRequest(event)
 		const responseText = await response.text();
 		handleLogoutResponse(responseText);
 	}
+	else{
+
+		alert("Incorrect credentials, please try again");
+	}
 
 
 }
@@ -107,7 +102,7 @@ async function SendValidateRequest(event)
 	var username = cookie.username;
 	var ID = cookie.sessionKey;
 	event.preventDefault();
-	let response = await fetch("./login.php",{
+	let response = await fetch("./authentication.php",{
 		headers:{"Content-Type":"application/x-www-form-urlencoded"},
 		method:"POST",
 		body:"type=validate_session&username="+
@@ -129,6 +124,7 @@ async function SendValidateRequest(event)
 
 async function HandleLoginResponse(response)
 {
+	try{
     let decodedResponse;
 	console.log(response);	
     decodedResponse = jwt_decode(response);
@@ -137,8 +133,10 @@ async function HandleLoginResponse(response)
 	window.location.href="./home.html";
 	sessionStorage.setItem("cookie", JSON.stringify(decodedResponse));
 	console.log(JSON.parse(sessionStorage.getItem("cookie")));
-	isLoggedIn = true;
-}
+}catch{
+	alert("Invalid Login Credentials");
+
+}}
 	// else{
 	// 	document.getElementById("textResponse").innerHTML = "response: invalide credentials <p>";
 		
@@ -171,4 +169,15 @@ async function handleLogoutResponse(response){
 	console.log(response);
     window.location.href="./index.html";
     localStorage.removeItem("cookie");
+}
+
+window.onload = function(){
+	let cookie = JSON.parse(sessionStorage.getItem("cookie"));
+
+	console.log(window.location.pathname);
+	console.log(cookie);
+	if(window.location.pathname !== "/index.html" && cookie == null){
+		alert("not logged in, redirecting you to the home page.");
+		window.location.href='./index.html'
+	}
 }

@@ -1,14 +1,22 @@
 document.getElementById("searchButton").addEventListener("click", getBooks);
 async function getBooks(){
+    var title = document.getElementById("searchBar").value;
+    console.log(title);
     document.getElementById("output").innerHTML = "";
-        var searchResult = document.getElementById("searchBar").value;
-        fetch("http://openlibrary.org/search.json?q="+searchResult)
-        .then(a => a.json())
-        .then(response => {
-            console.log(response.docs)
-            for(var i = 0; i <10; i++){
-                document.getElementById("output").innerHTML += "<h2>" + response.docs[i].title + "<h2>"+ response.docs[i].author_name + "<img src=https://covers.openlibrary.org/b/id/"+response.docs[i].cover_i+"-M.jpg><br>";
-            }
-        })
+    let response = await fetch("./bookService.php",{
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        method:"POST",
+        body:"type=booksearch&title="+
+        title
+    });
+        
+            if (response.ok){		
+            const responseText = await response.text();
+            console.log(responseText)
+             console.log(JSON.parse(responseText));
+            json = JSON.parse(responseText);
+            document.getElementById("output").innerHTML += "<h2> "+ json.bookTitles[0];
+    
+        }
+    }
 
-}

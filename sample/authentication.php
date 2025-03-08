@@ -16,7 +16,7 @@ $username = $_POST['username'] ?? ' ';
 $password = $_POST['password'] ?? ' ';
 $sessionKey = $_POST['sessionKey'] ?? ' ';
 try{
-$client = new rabbitMQClient("testRabbitMQ.ini","AuthenticationServer");
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 } catch(Exception $e){
 	error_log("RabbitMQClient error, could not connect" . $e ->getMessage());
 	die("error, please see log for deets, bye");
@@ -40,7 +40,7 @@ switch ($request["type"])
 			$payload = [
 				"username" => $RMQresponse["message"],
 				"sessionKey" => $RMQresponse["sessionKey"],
-				"expireTime" => time() + 3600,
+				"expireTime" => time() / 60
 			];
 			$jwt = JWT::encode($payload, $key, 'HS256');
 			echo json_encode($jwt);
