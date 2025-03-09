@@ -23,3 +23,14 @@ body{
     position: top;
 
 }
+.stars i{
+    color: gray;
+    font-size: 35px;
+    cursor:pointer;
+    transition: color 0.2s ease-in;
+}
+.stars i.active{
+    fill:gold;
+    color:gold;
+
+}

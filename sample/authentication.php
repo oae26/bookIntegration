@@ -38,8 +38,9 @@ switch ($request["type"])
 			$key = (string)$RMQresponse["sessionKey"];
 
 			$payload = [
-				"username" => $RMQresponse["message"],
+				"username" => $RMQresponse["username"],
 				"sessionKey" => $RMQresponse["sessionKey"],
+				"userID" => $RMQresponse["userID"],
 				"expireTime" => time() / 60
 			];
 			$jwt = JWT::encode($payload, $key, 'HS256');
