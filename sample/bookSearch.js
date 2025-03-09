@@ -14,9 +14,12 @@ async function getBooks(){
             const responseText = await response.text();
             console.log(responseText)
              console.log(JSON.parse(responseText));
-            json = JSON.parse(responseText);
-            document.getElementById("output").innerHTML += "<h2> "+ json.bookTitles[0];
-    
+            bookJson = JSON.parse(responseText);
+            sessionStorage.setItem("bookDetails", JSON.stringify(bookJson));
+            console.log(sessionStorage.getItem("bookDetails"));
+            for(var i = 0; i < bookJson.bookKeys.length; i++){        
+            document.getElementById("output").innerHTML += "<h2> <a href=./bookDetails.html?id="+bookJson.bookKeys[i]+">"+ bookJson.bookTitles[i]+"</a> <img src=https://covers.openlibrary.org/b/isbn/"+bookJson.bookKeys[i]+"-S.jpg></h2>";
+            }
         }
     }
 
