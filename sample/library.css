@@ -1,0 +1,25 @@
+*{
+    margin:0;
+    
+    box-sizing: border-box;
+}
+body{
+
+    
+    display:block;
+    align-items:center;
+    text-align: center;
+    padding: 70px;
+    
+    
+}
+#bookCover{
+    height: 500px;
+    width: 500px;
+}
+.bookHeader{
+
+    align-items:center;
+    position: top;
+
+}
