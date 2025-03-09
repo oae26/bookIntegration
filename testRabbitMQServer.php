@@ -3,13 +3,24 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require('mysqlconnect.php');
+
+
 
 function doLogin($username,$password)
 {
-    // lookup username in databas
-    // check password
-    return true;
-    //return false if not valid
+	global $db_username;
+	global $db_password;
+
+
+	if($username == $db_username && $password == $db_password){
+	return true;
+	} 
+	else{
+	return "ERROR: incorrect credentials";
+
+	}
+
 }
 
 function requestProcessor($request)
@@ -22,7 +33,7 @@ function requestProcessor($request)
   }
   switch ($request['type'])
   {
-    case "login":
+    case "Login":
       return doLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
