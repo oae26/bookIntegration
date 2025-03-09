@@ -167,7 +167,6 @@ class rabbitMQClient
 		$this->exchange = $this->machine[$server]["EXCHANGE"];
 		$this->queue = $this->machine[$server]["QUEUE"];
 	}
-
 	function process_response($response)
 	{
 		$uid = $response->getCorrelationId();

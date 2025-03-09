@@ -12,6 +12,22 @@ function doLogin($username,$password)
     $login = new loginDB();
     return $login->validateLogin($username,$password);
     //return false if not valid
+require('mysqlconnect.php');
+
+function doLogin($username,$password)
+{
+	global $db_username;
+	global $db_password;
+
+
+	if($username == $db_username && $password == $db_password){
+	return true;
+	} 
+	else{
+	return "ERROR: incorrect credentials";
+
+	}
+
 }
 
 function requestProcessor($request)
@@ -24,7 +40,7 @@ function requestProcessor($request)
   }
   switch ($request['type'])
   {
-    case "login":
+    case "Login":
       return doLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
