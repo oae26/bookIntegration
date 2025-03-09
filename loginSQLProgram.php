@@ -16,6 +16,7 @@ echo "Connected to project database." . PHP_EOL;
 
 function doLogin($username,$password)
 {
+	global $db_userID;
         global $db_username;
         global $db_password;
         global $mydb;
@@ -29,6 +30,7 @@ function doLogin($username,$password)
        
         if ($response = $mydb->query($query)){
         	while($row = $response -> fetch_row()){
+        		$db_userID = $row[0];
         		$db_username = $row[1];
         		$db_password = $row[2];
         	}	
@@ -46,7 +48,7 @@ function doLogin($username,$password)
         	$sessionInsertQuery = "update sessions set sessionKey = " . $sessionKey . " where username = '" . $db_username . "';";
         	if($sessionResponse = $mydb->query($sessionInsertQuery)){
         		echo "Sending back valid login/username and session key" . PHP_EOL;
-        		return array('returnCode' => '0', 'message'=>$db_username, 'sessionKey'=>$sessionKey);
+        		return array('returnCode' => '0', 'userID'=>$db_userID,'username'=>$db_username, 'sessionKey'=>$sessionKey);
         	}
         } 
         else{
