@@ -13,21 +13,23 @@ if ($mydb->errno != 0)
 }
 echo "Connected to project database." . PHP_EOL;
 
-function doBookSearch($title){
+function doCreateGroup($ownerID, $groupName){
 	global $mydb;
-	$bookTitlesArray = array();
-	
-	$query = "select title from books where lower(title) like lower('%".$title."%')";
+	$query = "insert into readingGroups (ownerID, groupName) values (".$ownerID.", '".$groupName."');";
 	
 	if ($response = $mydb->query($query)){
-        	while($row = $response -> fetch_row()){
-        		$bookTitlesArray[] = $row;
-        	}	
+		$groupID = $mydb->insert_id;
+		echo "New reading group created, ID: ".$groupID.", name: " . $groupName . ", ownerID: " . $ownerID . PHP_EOL;
+		$query2 = "insert into readingGroupUsers (readingGroupID, userID) values (".$groupID.", ".$ownerID.")";
+		if($response2 = $mydb->query($query2)){
+			return array('returnCode'=>'0', 'groupID'=>$groupID, 'groupName'=>$groupName, 'ownerID'=>$ownerID);		
+		}
 	}
-	echo "Sending results..." . PHP_EOL;
-	return array('returnCode' => '0', 'bookTitles'=>$bookTitlesArray);
+	if ($mydb->errno != 0)
+	{
+		return array('returnCode'=> '2', 'message'=>'Query error');
+	}
 }
-
 
 function requestProcessor($request)
 {
@@ -39,9 +41,8 @@ function requestProcessor($request)
   }
   switch ($request['type'])
   {
-    case "booksearch":
-    	echo "Searching for books...";
-    	return doBookSearch($request['title']);
+    case "creategroup":
+    	return doCreateGroup($request['ownerID'], $request['groupName']);
   }
 }
 
