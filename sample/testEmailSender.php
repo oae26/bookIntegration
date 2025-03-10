@@ -14,7 +14,7 @@ $mail = new PHPMailer(true);
 
 //RabbitMQ connection
 try {
-	$client = new rabbitMQClient("testRabbitMQ.ini", "emailServer");
+	$client = new rabbitMQClient("../rabbitMQ.ini", "emailServer");
 	
 	$RMQrequest = array();
 	$RMQrequest['type'] = 'getEmails';
