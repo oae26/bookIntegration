@@ -1,0 +1,77 @@
+#!/usr/bin/php
+<?php
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../newRabbitLib.inc');
+
+$mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
+
+if ($mydb->errno != 0)
+{
+        echo "failed to connect to database: ". $mydb->error . PHP_EOL;
+        exit(0);
+}
+echo "Connected to project database." . PHP_EOL;
+
+
+function doGetWatchlist($userID){
+	global $mydb;
+	$googleBookIDArray = array();
+	$bookNameArray = array();
+	$releaseDateArray = array();
+	
+	$query = "select googleBookID, bookName, bookReleaseDate from watchlists where userID = ".$userID.";";
+	
+	if($response = $mydb->query($query)){
+		while($row = $response->fetch_row()){
+			$googleBookIDArray[] = $row[0];
+			$bookNameArray[] = $row[1];
+			$releaseDateArray[] = $row[2];
+		}
+	}
+	if ($mydb->errno != 0)
+	{
+		return array('returnCode' => '2', 'message'=>'Query invalid');
+	}
+	
+	return array('returnCode'=>'0', 'googleBookIDArray'=>$googleBookIDArray, 'bookNameArray'=>$bookNameArray, 'releaseDateArray'=>$releaseDateArray);
+}
+
+
+function doAddWatchlist($googleBookID, $userID, $bookTitle, $bookReleaseDate){
+	global $mydb;
+	$rMessage = "";
+	$bookTitle = str_replace("'", '', $bookTitle);
+	$query = "insert into watchlists (googleBookID, userID, bookName, bookReleaseDate) values ('".$googleBookID."', ".$userID.", '".$bookTitle."', '".$releaseDate."');";
+	
+	if($response = $mydb->query($query)){
+		$rMessage = 'Book added to watchlist';
+	}
+	if ($mydb->errno != 0)
+	{
+		return array('returnCode' => '2', 'message'=>'Query invalid');
+	}
+	return array('returnCode'=>'0', 'message'=>$rMessage);
+}
+
+
+function requestProcessor($request)
+{
+  echo "received request".PHP_EOL;
+  var_dump($request);
+  if(!isset($request['type']))
+  {
+  	return "ERROR: unsupported message type";
+  }
+  switch ($request['type'])
+  {
+    case "getwatchlist":
+    	return doGetWatchlist($request['userID']);
+    case "addwatchlist":
+    	return doAddWatchlist($request['googleBookID'], $request['userID'], $request['bookTitle'], $request['bookReleaseDate']);
+  }
+}
+
+$server = new rabbitMQServer("rabbitMQ.ini","watchlist");
+$server->process_requests('requestProcessor');
+exit();
