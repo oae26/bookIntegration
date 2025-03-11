@@ -19,8 +19,17 @@ $bookID = $_POST['bookID'] ?? ' ';
 $rating = $_POST['rating'] ?? ' ';
 $groupName = $_POST['groupName'] ?? ' '; 
 $ownerID = $_POST['ownerID'] ?? ' ';
+$groupID = $_POST['groupID'] ?? ' ';
+$newBookID = $_POST['newBookID'] ?? '';
+$username = $_POST['username'] ?? ' ';
+$readPage = $_POST['readPage'] ?? ' ';
+$dueMonth = $_POST['dueMonth'] ?? ' ';
+$dueDay = $_POST['dueDay'] ?? ' ';
 try {
-	$client = new rabbitMQClient("testRabbitMQ.ini", "testServer");
+	$bookClient = new rabbitMQClient("testRabbitMQ.ini", "bookServer");
+	$ratingClient = new rabbitMQClient("testRabbitMQ.ini", "ratingServer");	
+	$reviewClient = new rabbitMQClient("testRabbitMQ.ini", "reviewServer");
+	$groupClient =  new rabbitMQClient("testRabbitMQ.ini", "groupServer");
 } catch (Exception $e) {
 	error_log("RabbitMQClient error, could not connect: " . $e->getMessage());
 	echo json_encode(["error" => "Could not connect to RabbitMQ"]);
@@ -34,7 +43,7 @@ switch ($request["type"])
 	$RMQrequest = array();
 	$RMQrequest['type'] = 'booksearch';
 	$RMQrequest['title'] = $title;
-    $RMQresponse = $client -> send_request($RMQrequest);
+    $RMQresponse = $bookClient -> send_request($RMQrequest);
 	echo json_encode($RMQresponse);
 	break;
 	case "review":
@@ -43,17 +52,17 @@ switch ($request["type"])
 	$RMQrequest['review'] = $review;
 	$RMQrequest['userID'] = $userID;
 	$RMQrequest['bookID'] = $bookID;
-	$RMQresponse = $client -> send_request($RMQrequest);
+	$RMQresponse = $reviewClient -> send_request($RMQrequest);
 	echo json_encode($RMQresponse);
 	
 	break;
-	case "rating":
+	case "rate":
 	$RMQrequest = array();
 	$RMQrequest['type'] = 'rate';
 	$RMQrequest['bookID'] = $bookID;
 	$RMQrequest['rating'] = $rating;
 
-	$RMQresponse = $client -> send_request($RMQrequest);
+	$RMQresponse = $ratingClient -> send_request($RMQrequest);
 	echo json_encode($RMQresponse);
 	break;
 	case "creategroup":
@@ -61,9 +70,46 @@ switch ($request["type"])
 		$RMQrequest['type'] = 'creategroup';
 		$RMQrequest['ownerID'] = $ownerID;
 		$RMQrequest['groupName'] = $groupName;
-		$RMQresponse = $client -> send_request($RMQrequest);
+		$RMQresponse = $groupClient -> send_request($RMQrequest);
 		echo json_encode($RMQresponse);
-}
+	break;
+	case "getgroups":
+		$RMQrequest = array();
+		$RMQrequest['type'] = 'getgroups';
+		$RMQrequest['userID'] = $userID;
+		$RMQresponse = $groupClient -> send_request($RMQrequest);
+		echo json_encode($RMQresponse);
+	break;
+	case "editbookid":
+
+		$RMQrequest = array();
+		$RMQrequest['type'] = 'editbookid';
+		$RMQrequest['groupID'] = $groupID;
+		$RMQrequest['newBookID'] = $newBookID;
+		
+		$RMQresponse = $groupClient -> send_request($RMQrequest);
+		echo json_encode($RMQresponse);
+		case "editduedetails":
+
+			$RMQrequest = array();
+			$RMQrequest['type'] = 'editduedetails';
+			$RMQrequest['groupID'] = $groupID;
+			$RMQrequest['readPage'] = $readPage;
+			$RMQrequest['dueMonth'] = $dueMonth;
+			$RMQrequest['dueDay'] = $dueDay;
+			
+			$RMQresponse = $groupClient -> send_request($RMQrequest);
+			echo json_encode($RMQresponse);
+	case  "recruituser":
+
+		$RMQrequest = array();
+		$RMQrequest['type'] = 'recruituser';
+		$RMQrequest['groupID'] = $groupID;
+		$RMQrequest['username'] = $username;
+		
+		$RMQresponse = $groupClient -> send_request($RMQrequest);
+		echo json_encode($RMQresponse);
+	}
 
 	exit(0);
 

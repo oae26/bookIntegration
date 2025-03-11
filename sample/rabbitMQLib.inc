@@ -271,4 +271,3 @@ class rabbitMQClient
 	}
 }
 ?>
-
