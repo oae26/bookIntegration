@@ -26,7 +26,7 @@ stars.forEach((star, index1) => {
 document.getElementById("reviewButton").addEventListener("click", submitReview);
 document.getElementById("ratingButton").addEventListener("click", submitRating);
 async function submitReview(){
- 
+    console.log(bookKey);
     console.log(reviewText.value);
     console.log(ratings);
     let response = await fetch("./bookService.php",{
@@ -47,12 +47,12 @@ async function submitReview(){
     
 }
 async function submitRating(){
- 
+        console.log(bookKey);
         console.log(ratings);
     let response = await fetch("./bookService.php",{
         headers:{"Content-Type":"application/x-www-form-urlencoded"},
         method:"POST",
-        body:"type=rating&rating="+ratings+"&userID="+parseInt(userData.userID)+"&bookID="+bookKey
+        body:"type=rate&rating="+ratings+"&bookID="+bookKey
     });
         
             if (response.ok){		

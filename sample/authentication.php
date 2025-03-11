@@ -16,7 +16,7 @@ $username = $_POST['username'] ?? ' ';
 $password = $_POST['password'] ?? ' ';
 $sessionKey = $_POST['sessionKey'] ?? ' ';
 try{
-$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+$client = new rabbitMQClient("testRabbitMQ.ini","AuthenticationServer");
 } catch(Exception $e){
 	error_log("RabbitMQClient error, could not connect" . $e ->getMessage());
 	die("error, please see log for deets, bye");

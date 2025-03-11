@@ -12,8 +12,8 @@ class rabbitMQServer
 	private $VHOST;
 	private $exchange;
 	private $queue;
-	private $routing_key = '*';
-	private $exchange_type = "topic";
+	private $routing_key;
+	private $exchange_type = "direct";
 	private $auto_delete = false;
 
 	function __construct($machine, $server = "rabbitMQ")
@@ -34,12 +34,13 @@ class rabbitMQServer
 		}
 		$this->exchange = $this->machine[$server]["EXCHANGE"];
 		$this->queue = $this->machine[$server]["QUEUE"];
+		$this->routing_key=$this->machine[$server]["ROUTING_KEY"];
 	}
 
 	function process_message($msg)
 	{
 		// send the ack to clear the item from the queue
-		if ($msg->getRoutingKey() !== "*")
+		if ($msg->getRoutingKey() !== $this->routing_key)
 		{
 			return;
 		}
@@ -144,9 +145,9 @@ class rabbitMQClient
 	private $VHOST;
 	private $exchange;
 	private $queue;
-	private $routing_key = '*';
+	private $routing_key;
 	private $response_queue = array();
-	private $exchange_type = "topic";
+	private $exchange_type = "direct";
 
 	function __construct($machine, $server = "rabbitMQ")
 	{
@@ -166,6 +167,7 @@ class rabbitMQClient
 		}
 		$this->exchange = $this->machine[$server]["EXCHANGE"];
 		$this->queue = $this->machine[$server]["QUEUE"];
+		$this->routing_key=$this->machine[$server]["ROUTING_KEY"];
 	}
 
 	function process_response($response)
@@ -269,4 +271,3 @@ class rabbitMQClient
 	}
 }
 ?>
-
