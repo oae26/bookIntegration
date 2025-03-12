@@ -33,7 +33,7 @@ function doGetWatchlist($userID){
 	{
 		return array('returnCode' => '2', 'message'=>'Query invalid');
 	}
-	
+	echo "Returning watchlist for user: " . $userID . PHP_EOL;
 	return array('returnCode'=>'0', 'googleBookIDArray'=>$googleBookIDArray, 'bookNameArray'=>$bookNameArray, 'releaseDateArray'=>$releaseDateArray);
 }
 
@@ -42,7 +42,16 @@ function doAddWatchlist($googleBookID, $userID, $bookTitle, $bookReleaseDate){
 	global $mydb;
 	$rMessage = "";
 	$bookTitle = str_replace("'", '', $bookTitle);
-	$query = "insert into watchlists (googleBookID, userID, bookName, bookReleaseDate) values ('".$googleBookID."', ".$userID.", '".$bookTitle."', '".$releaseDate."');";
+	
+	if(($userID == "") || ($userID == "undefined") || ($userID == NULL)) return array('returnCode' => '2', 'message'=>'Query invalid');
+	
+	if(($bookTitle == "") || ($bookTitle == "undefined") || ($bookTitle == NULL)) return array('returnCode' => '2', 'message'=>'Query invalid');
+	
+	if(($googleBookID == "") || ($googleBookID == "undefined") || ($googleBookID == NULL)) return array('returnCode' => '2', 'message'=>'Query invalid');
+	
+	if(($bookReleaseDate == "") || ($bookReleaseDate == "undefined") || ($bookReleaseDate == NULL)) return array('returnCode' => '2', 'message'=>'Query invalid');
+	
+	$query = "insert into watchlists (googleBookID, userID, bookName, bookReleaseDate) values ('".$googleBookID."', ".$userID.", '".$bookTitle."', '".$bookReleaseDate."');";
 	
 	if($response = $mydb->query($query)){
 		$rMessage = 'Book added to watchlist';
@@ -51,6 +60,7 @@ function doAddWatchlist($googleBookID, $userID, $bookTitle, $bookReleaseDate){
 	{
 		return array('returnCode' => '2', 'message'=>'Query invalid');
 	}
+	echo "Book added to watchlist" . PHP_EOL;
 	return array('returnCode'=>'0', 'message'=>$rMessage);
 }
 

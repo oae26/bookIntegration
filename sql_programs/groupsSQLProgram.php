@@ -113,7 +113,12 @@ function doAddUser($groupID, $username){
 					$query2 = "insert into readingGroupUsers (readingGroupID, userID) values (".$groupID.", ".$newUserID.");";
 					if ($response2 = $mydb->query($query2)){
 						echo "User added to reading group" . PHP_EOL;
-						return array('returnCode'=>'0', 'message'=>'User added to reading group', 'username'=>$username);
+						$query3 = "select groupName from readingGroups where id = ".$groupID.";";
+						if($response3 = $mydb->query($query3)){
+							$row = $response3->fetch_row();
+							$groupName = $row[0];
+							return array('returnCode'=>'0', 'message'=>'User added to reading group', 'username'=>$username, 'groupName'=>$groupName);
+						}
 					}
 				}
 				else{
