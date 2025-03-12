@@ -132,7 +132,6 @@ async function HandleLoginResponse(response)
     sessionStorage.setItem("cookie", decodedResponse);
 	window.location.href="./home.html";
 	sessionStorage.setItem("cookie", JSON.stringify(decodedResponse));
-	console.log(JSON.parse(sessionStorage.getItem("cookie")));
 }catch{
 	alert("Invalid Login Credentials");
 
@@ -152,6 +151,8 @@ async function HandleRegisterResponse(response){
 else{
 	document.getElementById("textResponse").innerHTML = "user already exists";
 }
+location.reload();
+
 }
 	
 async function handleValidateResponse(response){
@@ -168,16 +169,19 @@ async function handleValidateResponse(response){
 async function handleLogoutResponse(response){
 	console.log(response);
     window.location.href="./index.html";
-    localStorage.removeItem("cookie");
+    
+	sessionStorage.clear("cookie");
+	sessionStorage.removeItem("cookie");
+	cookie = null;
 }
 
 window.onload = function(){
 	let cookie = JSON.parse(sessionStorage.getItem("cookie"));
 
 	console.log(window.location.pathname);
-	console.log(cookie);
 	if(window.location.pathname !== "/index.html" && cookie == null){
 		alert("not logged in, redirecting you to the home page.");
 		window.location.href='./index.html'
+		cookie = null;
 	}
 }
