@@ -25,11 +25,18 @@ $username = $_POST['username'] ?? ' ';
 $readPage = $_POST['readPage'] ?? ' ';
 $dueMonth = $_POST['dueMonth'] ?? ' ';
 $dueDay = $_POST['dueDay'] ?? ' ';
+$googleBookID = $_POST['googleBookID'] ?? ' ';
+$bookReleaseDate = $_POST['bookReleaseDate'] ?? '';
+
+
 try {
 	$bookClient = new rabbitMQClient("testRabbitMQ.ini", "bookServer");
 	$ratingClient = new rabbitMQClient("testRabbitMQ.ini", "ratingServer");	
 	$reviewClient = new rabbitMQClient("testRabbitMQ.ini", "reviewServer");
 	$groupClient =  new rabbitMQClient("testRabbitMQ.ini", "groupServer");
+	$watchListClient =  new rabbitMQClient("testRabbitMQ.ini", "watchList");
+	$emailClient = new rabbitMQClient("testRabbitMQ.ini","emailServer"); 
+
 } catch (Exception $e) {
 	error_log("RabbitMQClient error, could not connect: " . $e->getMessage());
 	echo json_encode(["error" => "Could not connect to RabbitMQ"]);
@@ -46,6 +53,24 @@ switch ($request["type"])
     $RMQresponse = $bookClient -> send_request($RMQrequest);
 	echo json_encode($RMQresponse);
 	break;
+	case "addwatchlist":
+		$RMQrequest = array();
+		$RMQrequest['type'] = 'addwatchlist';
+		$RMQrequest['googleBookID'] = $googleBookID;
+		$RMQrequest['userID'] = $userID;
+		$RMQrequest['bookTitle'] = $title;
+		$RMQrequest['bookReleaseDate'] = $bookReleaseDate;
+		$RMQresponse = $watchListClient -> send_request($RMQrequest);
+		echo json_encode($RMQresponse);
+		break;
+		case "getwatchlist":
+			$RMQrequest = array();
+			$RMQrequest['type'] = 'getwatchlist';
+			$RMQrequest['userID'] = $userID;
+			
+			$RMQresponse = $watchListClient -> send_request($RMQrequest);
+			echo json_encode($RMQresponse);
+			break;
 	case "review":
 	$RMQrequest = array();
 	$RMQrequest['type'] = 'addreview';
@@ -66,6 +91,15 @@ switch ($request["type"])
 	echo json_encode($RMQresponse);
 	break;
 	case "creategroup":
+
+	
+		$RMQrequest = [
+			'type' => 'creategroup',
+			'ownerID' => $ownerID,
+			'groupName' => $groupName
+		];
+
+	
 		$RMQrequest = array();
 		$RMQrequest['type'] = 'creategroup';
 		$RMQrequest['ownerID'] = $ownerID;
@@ -101,7 +135,16 @@ switch ($request["type"])
 			$RMQresponse = $groupClient -> send_request($RMQrequest);
 			echo json_encode($RMQresponse);
 	case  "recruituser":
-
+		$notifRequest = [
+			'type' => 'sendgroupemail',
+			'username' => $username,
+			'groupname' => $groupName
+		];
+		try {
+			$emailClient->send_request($notifRequest);
+		} catch (Exception $e) {
+			error_log("Email request failed: " . $e->getMessage());
+		}
 		$RMQrequest = array();
 		$RMQrequest['type'] = 'recruituser';
 		$RMQrequest['groupID'] = $groupID;
@@ -110,6 +153,8 @@ switch ($request["type"])
 		$RMQresponse = $groupClient -> send_request($RMQrequest);
 		echo json_encode($RMQresponse);
 	}
+	
+		
 
 	exit(0);
 

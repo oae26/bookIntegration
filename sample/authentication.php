@@ -17,6 +17,7 @@ $password = $_POST['password'] ?? ' ';
 $sessionKey = $_POST['sessionKey'] ?? ' ';
 try{
 $client = new rabbitMQClient("testRabbitMQ.ini","AuthenticationServer");
+$emailClient = new rabbitMQClient("testRabbitMQ.ini","emailServer"); 
 } catch(Exception $e){
 	error_log("RabbitMQClient error, could not connect" . $e ->getMessage());
 	die("error, please see log for deets, bye");
@@ -68,13 +69,26 @@ switch ($request["type"])
 		echo json_encode($RMQresponse);
 	break;
 	case "register":
-		
-		$RMQrequest = array();
-		$RMQrequest['type'] = 'register';
-		$RMQrequest['username'] = $username;
-		$RMQrequest['password'] = $password;
-		$RMQresponse = $client -> send_request($RMQrequest);
+		$notifRequest = [
+			'type' => 'sendemail',
+			'username' => $username
+		];
+	
+		$RMQrequest = [
+			'type' => 'register',
+			'username' => $username,
+			'password' => $password
+		];
+
+		try {
+			$emailClient->send_request($notifRequest);
+		} catch (Exception $e) {
+			error_log("Email request failed: " . $e->getMessage());
+		}
+	
+		$RMQresponse = $client->send_request($RMQrequest);
 		echo json_encode($RMQresponse);
+		exit;
 	}
 	exit(0);
 

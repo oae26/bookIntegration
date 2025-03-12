@@ -59,16 +59,18 @@ async function createGroup(){
         console.log(ownerIDArray[0]);
         let isOwner;
         let ownerID;
-                for(var i = 0; i < groupIDArray.length; i++){
+                for(var i = 0; i < ownerIDArray.length; i++){
                     let row = document.createElement("tr");
                     if(cookie.userID == ownerIDArray[i]){
                         isOwner = true;
-                        ownerID = groupIDArray[i];
+                        ownerID = ownerIDArray[i];
                     }
             
              
                 row.innerHTML = `
-                    <td>${groupIDArray[i]}</td>
+                    <td id="groupID">
+                    
+                    ${groupIDArray[i]}</td>
                     <td>${groupNameArray[i]}</td>
                     <td>${ownerIDArray[i]}</td>
                     <td id="bookID"><input type=text placeholder="${bookIDArray[i]}"><button class=editBookID style="display: ${isOwner ? 'inline-block' : 'none'}">Edit ID</button></td>
@@ -76,7 +78,7 @@ async function createGroup(){
                      <td><input type=text id="dueMonth" placeholder="${dueMonthArray[i]}"></td>
                      <td><input type=text  id="dueDay" placeholder="${dueDayArray[i]}">
                      </td>
-                     <input type=text id="groupID"><button class=editDueDate  style="display: ${isOwner ? 'inline-block' : 'none'}">Edit DueDate</button></td>
+                     <input type=text ><button class=editDueDate  style="display: ${isOwner ? 'inline-block' : 'none'}">Edit DueDate</button></td>
                 `;
                 groupTable.appendChild(row);
                 document.querySelectorAll(".editBookID").forEach(button => {
@@ -151,15 +153,15 @@ async function editDueDate(event){
                         }
 
 async function recruitUser(){
-    var ownerID = cookie.userID;
-    console.log(ownerID);
-    groupName = document.getElementById("groupName").value;
+   let  groupID = parseInt(document.getElementById("groupID").textContent);
+    console.log(groupID);
+    let groupName = document.getElementById("groupName").value;
     let username = document.getElementById("recruitUser").value;
-
+    console.log(groupName);
     let response = await fetch("./bookService.php",{
     headers:{"Content-Type":"application/x-www-form-urlencoded"},
     method:"POST",
-    body:"type=recruituser&groupID=1&username="+username
+    body:"type=recruituser&groupID="+groupID+"&username="+username+"&groupname="+groupName
                         });
                             
                                 if (response.ok){		
