@@ -73,7 +73,7 @@ async function createGroup(){
                     ${groupIDArray[i]}</td>
                     <td>${groupNameArray[i]}</td>
                     <td>${ownerIDArray[i]}</td>
-                    <td id="bookID"><input type=text placeholder="${bookIDArray[i]}"><button class=editBookID style="display: ${isOwner ? 'inline-block' : 'none'}">Edit ID</button></td>
+                    <td><input type=text id="bookID"placeholder="${bookIDArray[i]}"><button class=editBookID style="display: ${isOwner ? 'inline-block' : 'none'}">Edit ID</button></td>
                     <td><input id="pageRead"  type=text placeholder="${readPageArray[i]}"></td>
                      <td><input type=text id="dueMonth" placeholder="${dueMonthArray[i]}"></td>
                      <td><input type=text  id="dueDay" placeholder="${dueDayArray[i]}">
@@ -97,7 +97,7 @@ async function editDueDate(event){
     event.preventDefault();
     console.log(document.getElementById("groupID").value);
     
-   var groupID = document.getElementById("groupID").value;
+   var groupID = parseInt(document.getElementById("groupID").textContent);
    console.log(groupID); 
    var dueMonth = document.getElementById("dueMonth").value; 
     var dueDay = document.getElementById("dueDay").value;
@@ -114,17 +114,17 @@ async function editDueDate(event){
              console.log(JSON.parse(responseText));
                       }
         }
+
         async function editBookID(event){
             event.preventDefault();
-            var ownerID = cookie.userID;
-            console.log(ownerID);
-            groupName = document.getElementById("groupName").value;
+            var groupID = parseInt(document.getElementById("groupID").textContent);
             var bookID = document.getElementById("bookID").value;
+            console.log(bookID);
             // to do, make it so that the data.groupIDArRAY fields are equal to the input types. 
             let response = await fetch("./bookService.php",{
                 headers:{"Content-Type":"application/x-www-form-urlencoded"},
                 method:"POST",
-                body:"type=editbookid&groupID=1&newBookID="+bookID
+                body:"type=editbookid&groupID="+groupID+"&newBookID="+bookID
             });
                 
                     if (response.ok){		
@@ -138,7 +138,6 @@ async function editDueDate(event){
                     console.log(ownerID);
                     groupName = document.getElementById("groupName").value
                 
-                    // to do, make it so that the data.groupIDArRAY fields are equal to the input types. 
                     let response = await fetch("./bookService.php",{
                         headers:{"Content-Type":"application/x-www-form-urlencoded"},
                         method:"POST",

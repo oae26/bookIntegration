@@ -123,6 +123,7 @@ switch ($request["type"])
 		
 		$RMQresponse = $groupClient -> send_request($RMQrequest);
 		echo json_encode($RMQresponse);
+	break;
 		case "editduedetails":
 
 			$RMQrequest = array();
@@ -134,6 +135,8 @@ switch ($request["type"])
 			
 			$RMQresponse = $groupClient -> send_request($RMQrequest);
 			echo json_encode($RMQresponse);
+			break;
+
 	case  "recruituser":
 		$notifRequest = [
 			'type' => 'sendgroupemail',
