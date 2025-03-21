@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 require_once('../path.inc');
-require_once('../get_host_info.inc');
+require_once('get_host_info.inc');
 require_once('../rabbitMQLib.inc');
 require_once('vendor/autoload.php');
 
@@ -41,7 +41,7 @@ function sendRegistrationEmail($email)
 	} 
 }
 
-function sendTwoFactorAuthEmail($email)
+function sendTwoFactorAuthEmail($email, $code)
 {
 	$mail = new PHPMailer(true);
 	//Server settings
@@ -59,8 +59,12 @@ function sendTwoFactorAuthEmail($email)
         
         $mail->isHTML(true);
         $mail->Subject = 'Confirm Login';
-	$mail->Body = 'Hello $username, please confirm this is you.';
-	//$mail->AltBody = "";
+        $code = $request['code'];
+        
+        $mail->clearAddresses();
+        $mail->addAddress($email);
+        
+	$mail->Body = 'Hello $username, your two factor authenticaion login code is: <strong>$code</strong><br><br>This code will expire in 3 minutes.';
 	
 	//Send the email
 	if (!$mail->send()) {
@@ -119,12 +123,10 @@ function requestProcessor($request)
   {
     case "sendEmail":
     	return sendRegistrationEmail($request['username']);
-  }
-  case "sendgroupemail":
-    	return sendReadingGroupEmail($request['username, groupname']);
-  }  
-  case "sendAuthenticaion":
-  	return sendTwoFactorAuthEmail($request['username']);	
+    case "sendgroupemail":
+    	return sendReadingGroupEmail($request['username, groupname']);  
+    case "sendAuthenticaion":
+  	return sendTwoFactorAuthEmail($request['username'], $request['code']);	
   }
 }
 
