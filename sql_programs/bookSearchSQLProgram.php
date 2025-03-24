@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../newRabbitLib.inc');
 
 $mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
 
@@ -19,6 +19,8 @@ function doBookSearch($title){
 	$bookTitlesArray = array();
 	$bookYearsArray = array();
 	$bookAuthorsArray = array();
+	
+	$title = str_replace("'", '', $title);
 	
 	$query = "select id, title, year from books where lower(title) like lower('%".$title."%')";
 	
@@ -66,7 +68,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("rabbitMQ.ini","testServer");
+$server = new rabbitMQServer("rabbitMQ.ini","books");
 $server->process_requests('requestProcessor');
 exit();
 ?>

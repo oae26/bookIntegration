@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../newRabbitLib.inc');
 
 $mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
 
@@ -64,7 +64,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("rabbitMQ.ini","testServer");
+$server = new rabbitMQServer("rabbitMQ.ini","ratings");
 $server->process_requests('requestProcessor');
 exit();
 ?>
