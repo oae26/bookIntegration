@@ -75,10 +75,8 @@ function doEditBookID($groupID, $newBookID){
 	$query = "update readingGroups set bookID = '".$newBookID."' where id = ".$groupID.";";
 	
 	if ($response = $mydb->query($query)){
-		if($response->num_rows != 0){
 			echo "Group ID " .$groupID. " bookID updated to " . $newBookID . PHP_EOL;
 			return array('returnCode' => '0', 'message'=>'Group Book update success');
-		}
 	}
 	echo "Book ID update query failure";
 	return array('returnCode' => '1', 'message'=>'Query error');
