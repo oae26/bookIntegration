@@ -1,8 +1,13 @@
 #!/usr/bin/php
 <?php
-require_once('../path.inc');
-require_once('../get_host_info.inc');
-require_once('../newRabbitLib.inc');
+require_once('/srv/path.inc');
+require_once('/srv/get_host_info.inc');
+require_once('/srv/newRabbitLib.inc');
+
+//uncomment for local testing
+//require_once('../path.inc');
+//require_once('../get_host_info.inc');
+//require_once('../newRabbitLib.inc');
 
 $mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
 
@@ -22,20 +27,23 @@ function doBookSearch($title){
 	
 	$title = str_replace("'", '', $title);
 	
-	$query = "select id, title, year from books where lower(title) like lower('%".$title."%')";
+	$query = "select id, title, year from booksB where lower(title) like lower('%".$title."%') limit 10";
 	
 	if ($response = $mydb->query($query)){
 		if($response->num_rows != 0){
 			while($row = $response -> fetch_row()){
         			$bookKeysArray[] = $row[0];
+        			echo $row[0] . PHP_EOL;
         			$bookTitlesArray[] = $row[1];
+        			echo $row[1] . PHP_EOL;
         			$bookYearsArray[] = $row[2];
+        			echo $row[2] . PHP_EOL;
         		}
 		}
 		foreach($bookKeysArray as $bookKey){
 			$insertString = "";
 			$authorQuery  = " 
-				select authorId, authorName, title from bookToAuthor join books on bookToAuthor.bookId = books.id join authors on bookToAuthor.authorId = authors.id where books.id = '".$bookKey."'";
+				select authorId, authorName, title from bookToAuthorB join booksB on bookToAuthorB.bookId = booksB.id join authorsB on bookToAuthorB.authorId = authorsB.id where booksB.id = '".$bookKey."'";
 			if($authorResponse = $mydb->query($authorQuery)){
 				while($authorRow = $authorResponse -> fetch_row()){
 					$insertString = $insertString . $authorRow[1] . ", "; 
@@ -68,7 +76,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("rabbitMQ.ini","books");
+$server = new rabbitMQServer("/srv/sql_programs/rabbitMQ.ini","books");
 $server->process_requests('requestProcessor');
 exit();
 ?>
