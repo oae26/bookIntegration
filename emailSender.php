@@ -78,7 +78,7 @@ function sendReadingGroupEmail($email)
 	} 
 }
 
-
+// Function that processes request to access the internet
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
