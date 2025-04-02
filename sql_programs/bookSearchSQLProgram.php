@@ -24,6 +24,7 @@ function doBookSearch($title){
 	$bookTitlesArray = array();
 	$bookYearsArray = array();
 	$bookAuthorsArray = array();
+	$bookCoversArray = array();
 	
 	$title = str_replace("'", '', $title);
 	
