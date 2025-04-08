@@ -18,9 +18,9 @@ function olAPISearch($username, $searchString){
 	
 	// Check if the search string has spaces and replace those spaces with plus symbol
 	if (preg_match('/\\s/',$searchString)){
-		echo "String has space bars".PHP_EOL;
+		//echo "String has space bars".PHP_EOL;
 		$searchString = preg_replace('/\\s/',"+",$searchString);
-		echo $searchString;
+		//echo $searchString.PHP_EOL;
 	}
 	
 	$apiLink = "https://openlibrary.org/search.json?q=";	// Used for searching with the API
@@ -43,36 +43,43 @@ function olAPISearch($username, $searchString){
 	echo "Running API search for: ".$searchString.PHP_EOL;
 	$apiLink .= $searchString;
 	if ($data = file_get_contents($apiLink,false,$context)){
-		echo "Data".$data.PHP_EOL;
-	}
-	
-	// BookAPI needs HEADER that specifies a User-Agent string with the name of our application and our contact email
-	
-		// Go to sql_programs/bookSearchSQLProgram.php to see how to do json and array managment
-		/*if($data->num_rows != 0){
-			while($row = $data -> fetch_row()){
-        			$bookKeysArray[] = $row[0];
-        			$bookTitlesArray[] = $row[1];
-        			$bookYearsArray[] = $row[2];
-        		}
-		}
-		foreach($bookKeysArray as $bookKey){
+		//echo "Data".$data.PHP_EOL;
+		
+		$json = json_decode($data, true);
+		
+		// Get the data of each book found
+		foreach($json['docs'] as $field => $value){
 			$insertString = "";
-			$authorQuery  = " 
-				select authorId, authorName, title from bookToAuthor join books on bookToAuthor.bookId = books.id join authors on bookToAuthor.authorId = authors.id where books.id = '".$bookKey."'";
-			if($authorResponse = $mydb->query($authorQuery)){
-				while($authorRow = $authorResponse -> fetch_row()){
-					$insertString = $insertString . $authorRow[1] . ", "; 
-				}
-				
+			$bookKeysArray[] = str_replace("/works/",'',$json['docs'][$field]['key']);
+			$bookTitlesArray[] = $json['docs'][$field]['title'];
+			$bookYearsArray[] = $json['docs'][$field]['first_publish_year'];
+			
+			//Do author array
+			foreach($json['docs'][$field]['author_name'] as $field2 => $value2){
+				$insertString = $insertString.$json['docs'][$field]['author_name'][$field2].", "; 
 			}
 			$bookAuthorsArray[] = $insertString;
-		} */
+			//$bookAuthorsArray[] = $json['docs'][$field]['author_name'][0];
+			
+			//Do cover array
+			$bookCoversArray[] = $json['docs'][$field]['cover_edition_key'];
+			
+			//Debug
+			//echo 'Key: '.$bookKeysArray[$field].PHP_EOL;
+			//echo 'Title: '.$bookTitlesArray[$field].PHP_EOL;
+			//echo 'Year: '.$bookYearsArray[$field].PHP_EOL;
+			
+			
+		}
+	}
 	
-	//echo "Sending API results..." . PHP_EOL;
+	echo "Sending API results..." . PHP_EOL;
 	// Get json file results
-	//echo "Number of books found: " . sizeof($bookKeysArray) . PHP_EOL; 
-	//return array('returnCode' => '0', 'bookKeys'=>$bookKeysArray, 'bookTitles'=>$bookTitlesArray, 'bookYears'=>$bookYearsArray, 'bookAuthors'=>$bookAuthorsArray, 'bookCovers'=>$bookCoversArray);
+	echo "Number of books found: " . sizeof($bookKeysArray) . PHP_EOL;
+	if (sizeof($bookKeysArray) == 0){
+		return NULL;
+	}
+	return array('returnCode' => '0', 'bookKeys'=>$bookKeysArray, 'bookTitles'=>$bookTitlesArray, 'bookYears'=>$bookYearsArray, 'bookAuthors'=>$bookAuthorsArray, 'bookCovers'=>$bookCoversArray);
 }
 
 function requestProcessor($request)
@@ -88,7 +95,7 @@ function requestProcessor($request)
     case "Login":
       return doLogin($request['username'],$request['password']);
     case "OLBookSearch":
-    	return; //new function that will take in a request from user and their search string and return the book from api, else return null if book does not exists.
+    	return olAPISearch($request['username'],$request['title']); 
   }
   return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
