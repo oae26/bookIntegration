@@ -16,7 +16,7 @@ echo "Connected to deployment database." . PHP_EOL;
 
 function scpFile ($remoteUser, $remoteHost, $remotePath, $localPath) {
 
-	$cmd = "scp {$remoteUser}@ {$remoteUser}@{$remoteHost}:{$remotePath}";
+	$cmd = "scp {$remoteUser}@{$remoteHost}:{$remotePath} {$localPath}";
 	echo "Deploying: $cmd" . PHP_EOL;
 	return shell_exec($cmd);
 	
@@ -37,12 +37,13 @@ function logDeployment($request) {
 
 	global $mydb;
 	
-	$version = $mydb->real_escape_string($version);
-	$source = $mydb->real_escape_string($source);
-	$destination = $mydb->real_escape_string($destination);
-	$zipfile = $mydb->real_escape_string($zipName);
+	$version = $mydb->real_escape_string($request['version']);
+	$source = $mydb->real_escape_string($request['source']);
+	$destination = $mydb->real_escape_string($request['destination'] ?? (($source == "dev") ? "qa" : "prod"));
+	$zipfile = $mydb->real_escape_string($request['zipFile']);
+	$description = $mydb->real_escape_string($request['description'] ?? '');
 	
-	$query = "INSERT INTO application_versions (version, source, destination, zip_file) VALUES ('$version', '$source', '$destination', '$zipfile')";
+	$query = "INSERT INTO application_versions (version, source, destination, zip_file, description) VALUES ('$version', '$source', '$destination', '$zipfile', '$description')";
 		  
 	if (!$mydb->query($query)) {
 		echo "Error logging deployment: " . $mydb->error . PHP_EOL;
@@ -59,25 +60,58 @@ function requestProcessor($request) {
 	echo "Received deployment message..." . PHP_EOL;
 	var_dump($request);
 	
-	if (!isset($request['type']) || $request['type'] !== 'deploy') {
+	if (!isset($request['type'])) {
 		return "ERROR: unsupported or missing message type";
 	}
 	
+	$type = $request['type'];
 	$version = $request['version'];
 	$source = $request['source'];
-	$destination = ($source == "dev") ? "qa" : "prod";
+	$destination = $request['destination'];
 	$zipfile = $request['zipFile'];
-	$zipRemotePath = "../git/bookintegration/zips/{$zipFile}";
-	$zipLocalPath = "../git/bookintegration/deploy/staging/{$zipFile}";
-	$targetPath = "../git/bookintegration/deploy/releases/{$zipFile}";
+	$description = $request['desc'];
+	$user = $request['user'];
 	
-	$sourceHost = parse_ini_file('clusterIPs.ini')[$source];
-	scpFile('deploy', $sourceHost, $zipRemotePath, $zipLocalPath);
+	$zipRemotePath = "~/staging/{$zipfile}";
+	$zipLocalPath = "/home/yousef/deploy/staging/{$zipfile}";
+	$targetPath = "~/releases/{$zipfile}";
 	
-	logDeployment($request);
-	
-	$destHost = parse_ini_file('clusterIPs.ini')[$destination];
-	scpToCluster($zipLocalPath, 'deploy', $destHost, $targetPatah);
+	switch ($type) {
+		case 'deploy':
+			$sourceHost = parse_ini_file('clusterIPs.ini')[$source];
+			$destHost = parse_ini_file('clusterIPs.ini')[$destination];
+			
+			scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
+			logDeployment($request);
+			scpToCluster($zipLocalPath, $user, $destHost, $targetPath);
+			break;
+			
+		case 'web':
+		case 'sql':
+		case 'dmz':
+			if (!isset($request['destination'])) {
+				return "ERROR: Missing destination (qa or prod)";
+			}
+			
+			$role = $type;
+			$destination = $request['destination'];
+			$hostKey = "{$role}-{$destination}";
+			
+			$targetHost = parse_ini_file('clusterIPs.ini')[$hostKey];
+			
+			if (!$targetHost) {
+				return "ERROR: Target host for '$hostKey' not found in clusterIPs.ini";
+			}
+			
+			scpFile($user, $targetHost, $zipRemotePath, $zipLocalPath);
+			logDeployment($request);
+			scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
+			echo "Sent zip to $type node ($targetHost)" . PHP_EOL;
+			break;
+			
+		default:
+			return "ERROR: Unsupported message type '{$type}'";
+	}	
 	
 	echo "Deployment process complete." . PHP_EOL;
 	return array("status" => "success", "version" => $version);
