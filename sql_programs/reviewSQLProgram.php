@@ -10,7 +10,7 @@ require_once('/srv/newRabbitLib.inc');
 //require_once('../newRabbitLib.inc');
 
 
-$mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
+$mydb = new mysqli('127.0.0.1','testUser','12345','projectdb2');
 
 if ($mydb->errno != 0)
 {
