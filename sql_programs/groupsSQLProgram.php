@@ -157,7 +157,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("/srv/sql_programs/rabbitMQ.ini","groups");
+$server = new rabbitMQServer("/rabbitmqini/rabbitMQ.ini","groups");
 $server->process_requests('requestProcessor');
 exit();
 ?>

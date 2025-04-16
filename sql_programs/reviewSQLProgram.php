@@ -67,7 +67,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("/srv/sql_programs/rabbitMQ.ini","reviews");
+$server = new rabbitMQServer("/rabbitmqini/rabbitMQ.ini","reviews");
 $server->process_requests('requestProcessor');
 exit();
 

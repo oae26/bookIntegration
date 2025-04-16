@@ -188,7 +188,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("/srv/sql_programs/rabbitMQ.ini","login");
+$server = new rabbitMQServer("/rabbitmqini/rabbitMQ.ini","login");
 $server->process_requests('requestProcessor');
 exit();
 ?>
