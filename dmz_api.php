@@ -6,25 +6,6 @@ require_once('get_host_info.inc');
 //require_once('newRabbitLib.inc');
 require_once('rabbitMQLib.inc');
 
-// firewall that returns true if it's safe
-function firewall(){
-	$allowedIPs = [
-		'127.0.0.1',
-		'192.168.0.1',
-		'100.77.52.18',
-		'100.121.248.49',
-		'100.68.218.101'
-	];
-	
-	// Get the clients ip
-	$clientIP = $_SERVER['REMOTE_ADDR'];
-	
-	//echo "Client's IP: ".$clientIP.PHP_EOL;
-	
-	
-	//return 1;
-}
-
 // We are going to intergate logging for each API search
 function olAPISearch($username, $searchString){
 	// Create API call to search for book and return array for rabbitMQ
@@ -96,7 +77,7 @@ function olAPISearch($username, $searchString){
 	// Get json file results
 	echo "Number of books found: " . sizeof($bookKeysArray) . PHP_EOL;
 	if (sizeof($bookKeysArray) == 0){
-		return NULL;
+		return array ('returnCode' => '1');
 	}
 	return array('returnCode' => '0', 'bookKeys'=>$bookKeysArray, 'bookTitles'=>$bookTitlesArray, 'bookYears'=>$bookYearsArray, 'bookAuthors'=>$bookAuthorsArray, 'bookCovers'=>$bookCoversArray);
 }
@@ -122,7 +103,7 @@ function requestProcessor($request)
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
 
 echo "testRabbitMQServer BEGIN".PHP_EOL;
-firewall();
+
 olAPISearch("testUser", "test my pack");
 //$server->process_requests('requestProcessor'); // Comment this out if testing this solo
 echo "testRabbitMQServer END".PHP_EOL;
