@@ -3,10 +3,10 @@
 require_once('path.inc');
 require_once('rabbitMQLib.inc');
 if ($argc < 3) {
-    die("Usage: php script.php devDeployment <request_type>\n");
+    die("Usage: php script.php deployment <request_type>, version, source, dest, desc,zipfile,user\n");
 }
 
-if($argv[1] == 'devDeployment'){
+if($argv[1] == 'deployment'){
 	$client = new rabbitMQClient("testRabbitMQ.ini",$argv[1]);
 try{
 	$allowedSources= ['dev','qa','prod'];
