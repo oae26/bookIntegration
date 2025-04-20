@@ -31,9 +31,7 @@ else if($argv[1] == 'dmz'){ //run on dmz machine
 	if($res === true){
 		echo "Making zip..." . PHP_EOL;
 		$options = array('add_path' => '/', 'remove_all_path' => TRUE);
-		$options2 = array('add_path' => 'sql_programs/', 'remove_all_path' => TRUE);
-		//$zip->addGlob('/srv/*.*', GLOB_BRACE, $options);
-		//$zip->addGlob('/srv/sql_programs/*.*', GLOB_BRACE, $options2);
+		$zip->addGlob('/srv/*.*', GLOB_BRACE, $options);
 		$zip->close();	
 	}
 }
