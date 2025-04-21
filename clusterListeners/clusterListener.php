@@ -80,9 +80,9 @@ function requestProcessor($request) {
 	$description = $request['desc'];
 	$user = $request['user'];
 	
-	$zipRemotePath = "~/staging/{$zipfile}";
+	/*$zipRemotePath = "~/staging/{$zipfile}";
 	$zipLocalPath = "/home/yousef/deploy/staging/{$zipfile}";
-	$targetPath = "~/releases/{$zipfile}";
+	$targetPath = "~/releases/{$zipfile}";*/
 	
 	switch ($type) {
 		case 'web':
@@ -90,9 +90,17 @@ function requestProcessor($request) {
 				return "ERROR: Missing destination (qa or prod)";
 			}
 			
-			$zipRemotePath = "~/staging/{$zipfile}";
+			$zipRemotePath = "~/deploy/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/web/{$version}/{$zipfile}";
 			$targetPath = "~/var/www/sample/{$zipfile}";
+			
+			$localDir = dirname($zipLocalPath);
+			
+			if (!is_dir($localDir)) {
+				echo "creating directory: $localDir" . PHP_EOL;
+				mkdir($localDir, 0775, true);
+			}
+							
 			
 			$role = $type;
 			$destination = $request['destination'];
@@ -115,9 +123,16 @@ function requestProcessor($request) {
 			if (!isset($request['destination'])) {
 				return "ERROR: Missing destination (qa or prod)";
 			}
-			$zipRemotePath = "~/staging/{$zipfile}";
+			$zipRemotePath = "~/deploy/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/sql/{$version}/{$zipfile}";
 			$targetPath = "~/srv/{$zipfile}";
+			
+			$localDir = dirname($zipLocalPath);
+			
+			if (!is_dir($localDir)) {
+				echo "creating directory: $localDir" . PHP_EOL;
+				mkdir($localDir, 0775, true);
+			}
 			
 			$role = $type;
 			$destination = $request['destination'];
@@ -140,9 +155,16 @@ function requestProcessor($request) {
 			if (!isset($request['destination'])) {
 				return "ERROR: Missing destination (qa or prod)";
 			}
-			$zipRemotePath = "~/staging/{$zipfile}";
+			$zipRemotePath = "~/deploy/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/dmz/{$version}/{$zipfile}";
 			$targetPath = "~/srv/{$zipfile}";
+			
+			$localDir = dirname($zipLocalPath);
+			
+			if (!is_dir($localDir)) {
+				echo "creating directory: $localDir" . PHP_EOL;
+				mkdir($localDir, 0775, true);
+			}
 			
 			$role = $type;
 			$destination = $request['destination'];
@@ -171,7 +193,7 @@ function requestProcessor($request) {
 
 }
 
-$server = new rabbitMQServer("/home/yousef/git/bookIntegration/clusterListeners/deploymentRabbitMQ.ini","mysqlDeployment");
+$server = new rabbitMQServer("/home/yousef/git/bookIntegration/clusterListeners/deploymentRabbitMQ.ini","deployment");
 $server->process_requests('requestProcessor');
 exit();
 ?>
