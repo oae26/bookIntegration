@@ -7,7 +7,7 @@ $remoteHost = "";
 $remotePath = "";
 $localPath = "";
 
-if(!isset(argv[1] || !isset(argv[2] || !isset(argv[3])
+if(null == ($argv[1] || ($argv[2] || ($argv[3]))))
 {
 	exit;
 }
@@ -28,48 +28,48 @@ function scpToCluster ($localPath, $remoteUser, $remoteHost, $remotePath) {
 
 }
 
-switch(argv[1]){
+switch($argv[1]){
 	case "qa":
-		switch(argv[2]){
+		switch($argv[2]){
 			case "web":
 				$remoteUser = "oaeIT490";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["web-qa"];
 				$remotePath = "/var/www/sample/";
-				$localPath = "/web/".argv[3]."/webBundle.zip";
+				$localPath = "/web/".$argv[3]."/webBundle.zip";
 				break;
 			case "sql":
 				$remoteUser = "franklin";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["sql-qa"];
 				$remotePath = "/srv/";
-				$localPath = "/sql/".argv[3]."/sqlBundle.zip";
+				$localPath = "/sql/".$argv[3]."/sqlBundle.zip";
 				break;
 			case "dmz":
 				$remoteUser = "yousef";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["dmz-qa"];
 				$remotePath = "/srv";
-				$localPath = "/dmz/".argv[3]."/dmzBundle.zip";
+				$localPath = "/dmz/".$argv[3]."/dmzBundle.zip";
 				break;
 		}
 		break;
 	case "prod":
-		switch(argv[2]){
+		switch($argv[2]){
 			case "web":
 				$remoteUser = "oaeIT490";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["web-prod"];
 				$remotePath = "/var/www/sample/";
-				$localPath = "/web/".argv[3]."/webBundle.zip";
+				$localPath = "/web/".$argv[3]."/webBundle.zip";
 				break;
 			case "sql":
 				$remoteUser = "franklin";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["sql-prod"];
 				$remotePath = "/srv/";
-				$localPath = "/sql/".argv[3]."/sqlBundle.zip";
+				$localPath = "/sql/".$argv[3]."/sqlBundle.zip";
 				break;
 			case "dmz":
 				$remoteUser = "yousef";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["dmz-prod"];
 				$remotePath = "/srv";
-				$localPath = "/dmz/".argv[3]."/dmzBundle.zip";
+				$localPath = "/dmz/".$argv[3]."/dmzBundle.zip";
 				break;
 		}
 }
