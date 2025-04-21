@@ -35,19 +35,19 @@ switch(argv[1]){
 				$remoteUser = "oaeIT490";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["web-qa"];
 				$remotePath = "/var/www/sample/";
-				$localPath = "/web/".argv[3]."/webBundle.zip";
+				$localPath = "/home/yousef/deploy/staging/web/".argv[3]."/webBundle.zip";
 				break;
 			case "sql":
 				$remoteUser = "franklin";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["sql-qa"];
 				$remotePath = "/srv/";
-				$localPath = "/sql/".argv[3]."/sqlBundle.zip";
+				$localPath = "/home/yousef/deploy/staging/sql/".argv[3]."/sqlBundle.zip";
 				break;
 			case "dmz":
 				$remoteUser = "yousef";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["dmz-qa"];
 				$remotePath = "/srv";
-				$localPath = "/dmz/".argv[3]."/dmzBundle.zip";
+				$localPath = "/home/yousef/deploy/staging/dmz/".argv[3]."/dmzBundle.zip";
 				break;
 		}
 		break;
@@ -57,19 +57,19 @@ switch(argv[1]){
 				$remoteUser = "oaeIT490";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["web-prod"];
 				$remotePath = "/var/www/sample/";
-				$localPath = "/web/".argv[3]."/webBundle.zip";
+				$localPath = "/home/yousef/deploy/staging/web/".argv[3]."/webBundle.zip";
 				break;
 			case "sql":
 				$remoteUser = "franklin";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["sql-prod"];
 				$remotePath = "/srv/";
-				$localPath = "/sql/".argv[3]."/sqlBundle.zip";
+				$localPath = "/home/yousef/deploy/staging/sql/".argv[3]."/sqlBundle.zip";
 				break;
 			case "dmz":
 				$remoteUser = "yousef";
 				$remoteHost = parse_ini_file('clusterIPs.ini')["dmz-prod"];
 				$remotePath = "/srv";
-				$localPath = "/dmz/".argv[3]."/dmzBundle.zip";
+				$localPath = "/home/yousef/deploy/staging/dmz/".argv[3]."/dmzBundle.zip";
 				break;
 		}
 }
