@@ -1,10 +1,15 @@
 #!/usr/bin/php
 <?php
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('/srv/path.inc');
+require_once('/srv/get_host_info.inc');
+require_once('/srv/newRabbitLib.inc');
 
-$mydb = new mysqli('127.0.0.1','testUser','12345','projectdb');
+//uncomment for local testing
+//require_once('../path.inc');
+//require_once('../get_host_info.inc');
+//require_once('../newRabbitLib.inc');
+
+$mydb = new mysqli('127.0.0.1','testUser','12345','projectdb2');
 
 if ($mydb->errno != 0)
 {
@@ -16,6 +21,7 @@ echo "Connected to project database." . PHP_EOL;
 
 function doLogin($username,$password)
 {
+	global $db_userID;
         global $db_username;
         global $db_password;
         global $mydb;
@@ -29,6 +35,7 @@ function doLogin($username,$password)
        
         if ($response = $mydb->query($query)){
         	while($row = $response -> fetch_row()){
+        		$db_userID = $row[0];
         		$db_username = $row[1];
         		$db_password = $row[2];
         	}	
@@ -45,8 +52,8 @@ function doLogin($username,$password)
         	echo "Inserting session key into sessions table where username = fetched db username". PHP_EOL;
         	$sessionInsertQuery = "update sessions set sessionKey = " . $sessionKey . " where username = '" . $db_username . "';";
         	if($sessionResponse = $mydb->query($sessionInsertQuery)){
-        		echo "Sending back valid login/username and session key" . PHP_EOL;
-        		return array('returnCode' => '0', 'message'=>$db_username, 'sessionKey'=>$sessionKey);
+        		echo "Sending back userID: ".$db_userID.", username: ".$db_username.", sessionKey: " .$sessionKey. PHP_EOL;
+        		return array('returnCode' => '0', 'userID'=>$db_userID,'username'=>$db_username, 'sessionKey'=>$sessionKey);
         	}
         } 
         else{
@@ -72,7 +79,7 @@ function doRegister($username,$password)
         			$sessionInsertQuery = "insert into sessions (username) values ('" . $username ."')";
         			if($sessionInsertResponse = $mydb->query($sessionInsertQuery)){
         				echo "User registered, sessions table entry created" . PHP_EOL;
-        				return array("returnCode" => '0', 'message'=>"User registered");
+        				return array('returnCode' => '0', 'message'=>"User registered", 'username'=>$username);
         			}
         			else if ($mydb->errno != 0)
 				{
@@ -181,7 +188,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("rabbitMQ.ini","testServer");
+$server = new rabbitMQServer("/rabbitmqini/rabbitMQ.ini","login");
 $server->process_requests('requestProcessor');
 exit();
 ?>
