@@ -1,10 +1,10 @@
 #!/usr/bin/php
 <?php
 
-require_once('path.inc');
-require_once('get_host_info.inc');
-//require_once('newRabbitLib.inc');
-require_once('rabbitMQLib.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/path.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/get_host_info.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/rabbitMQLib.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/sample/vendor/autoload.php');
 
 // We are going to intergate logging for each API search
 function olAPISearch($username, $searchString){
@@ -100,12 +100,13 @@ function requestProcessor($request)
   return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+// Replace emailServer with noBookAPI
+$server = new rabbitMQServer("rabbitMQ.ini","emailServer");
 
-echo "testRabbitMQServer BEGIN".PHP_EOL;
+//echo "testRabbitMQServer BEGIN".PHP_EOL;
 
-olAPISearch("testUser", "test my pack");
-//$server->process_requests('requestProcessor'); // Comment this out if testing this solo
-echo "testRabbitMQServer END".PHP_EOL;
+//olAPISearch("testUser", "test my pack");
+$server->process_requests('requestProcessor'); // Comment this out if testing this solo
+//echo "testRabbitMQServer END".PHP_EOL;
 exit();
 ?>

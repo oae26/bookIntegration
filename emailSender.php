@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
-require_once('sample/vendor/autoload.php');
+require_once('/home/nina/Team/rabbitmqphp_example/path.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/get_host_info.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/rabbitMQLib.inc');
+require_once('/home/nina/Team/rabbitmqphp_example/sample/vendor/autoload.php');
 
 
 use PHPMailer\PHPMailer\PHPMailer;
