@@ -1,12 +1,15 @@
 #!/usr/bin/php
 <?php
 require_once('path.inc');
-require_once('rabbitMQLib.inc');
+require_once('newRabbitLib.inc');
 if ($argc < 3) {
     die("Usage: php script.php devDeployment <request_type>, version, source, dest, desc,zipfile,user\n");
 }
 
-if($argv[1] == 'devSQLDeployment'){
+if($argv[1] == 'test'){
+	$client = new rabbitMQClient("deploymentRabbitMQ.ini",$argv[1]);
+}
+else if($argv[1] == 'deployment'){
 	$client = new rabbitMQClient("deploymentRabbitMQ.ini",$argv[1]);
 }
 else if($argv[1] == 'qaSQLDeployment'){
@@ -15,6 +18,10 @@ else if($argv[1] == 'qaSQLDeployment'){
 else if($argv[1] == 'prodSQLDeployment'){
 	$client = new rabbitMQClient("deploymentRabbitMQ.ini",$argv[1]);
 }
+else if($argv[1] == 'devSQLDeployment'){
+	$client = new rabbitMQClient("deploymentRabbitMQ.ini",$argv[1]);
+}
+
 else
 {
 	die("No server specified or improper server specified. devDeployment expected.\n");
@@ -33,7 +40,6 @@ try{
 	$request['desc'] = $argv[6];
 	$request['zipFile'] = $argv[7];
 	$request['user'] = $argv[8];
-	$request['iniCase'] = $argv[1];
 	$response = $client->send_request($request);
 
 	echo "client received response: ".PHP_EOL;
