@@ -3,7 +3,7 @@
 require_once('path.inc');
 require_once('rabbitMQLib.inc');
 if ($argc < 5) {
-    die("Usage: php script.php <destination>, <request_type>, zipfile, version\n");
+    die("Usage: php script.php <destination>, <request_type>, version, zipFile\n");
 }
 
 if ($argv[1] == 'qa' or 'prod') {
