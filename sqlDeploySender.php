@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 require_once('path.inc');
-require_once('newRabbitLib.inc');
+require_once('rabbitMQLib.inc');
 if ($argc < 3) {
     die("Usage: php script.php devDeployment <request_type>, version, source, dest, desc,zipfile,user\n");
 }
