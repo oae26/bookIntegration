@@ -63,6 +63,12 @@ function logDeployment($request) {
 	
 }
 
+function unzipDeployedFile($remoteUser, $remoteHost, $targetPath) {
+	$cmd = "ssh {$remoteUser}@{$remoteHost} 'unzip -o {$targetPath} -d " .dirname($targetPath) . "'";
+	echo "Unzipping on remote: $cmd" . PHP_EOL;
+	return shell_exec($cmd);
+}
+
 function requestProcessor($request) {
 	
 	echo "Received deployment message..." . PHP_EOL;
@@ -117,6 +123,8 @@ function requestProcessor($request) {
 			scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
 			logDeployment($request);
 			scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
+			unzipDeployedFile($user, $targetHost, $targetPath);
+			
 			echo "Sent zip to $type node ($targetHost)" . PHP_EOL;
 			break;
 		case 'sql':
@@ -125,7 +133,7 @@ function requestProcessor($request) {
 			}
 			$zipRemotePath = "~/deploy/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/sql/{$version}/{$zipfile}";
-			$targetPath = "~/srv/{$zipfile}";
+			$targetPath = "/srv/{$zipfile}";
 			
 			$localDir = dirname($zipLocalPath);
 			
@@ -149,6 +157,8 @@ function requestProcessor($request) {
 			scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
 			logDeployment($request);
 			scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
+			unzipDeployedFile($user, $targetHost, $targetPath);
+			
 			echo "Sent zip to $type node ($targetHost)" . PHP_EOL;
 			break;
 		case 'dmz':
@@ -157,7 +167,7 @@ function requestProcessor($request) {
 			}
 			$zipRemotePath = "~/deploy/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/dmz/{$version}/{$zipfile}";
-			$targetPath = "~/srv/{$zipfile}";
+			$targetPath = "/srv/{$zipfile}";
 			
 			$localDir = dirname($zipLocalPath);
 			
@@ -181,6 +191,8 @@ function requestProcessor($request) {
 			scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
 			logDeployment($request);
 			scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
+			unzipDeployedFile($user, $targetHost, $targetPath);
+			
 			echo "Sent zip to $type node ($targetHost)" . PHP_EOL;
 			break;
 			
@@ -193,7 +205,7 @@ function requestProcessor($request) {
 
 }
 
-$server = new rabbitMQServer("/home/yousef/git/bookIntegration/clusterListeners/deploymentRabbitMQ.ini","deployment");
+$server = new rabbitMQServer("deploymentRabbitMQ.ini","deployment");
 $server->process_requests('requestProcessor');
 exit();
 ?>
