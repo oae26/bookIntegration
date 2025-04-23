@@ -96,9 +96,9 @@ function requestProcessor($request) {
 				return "ERROR: Missing destination (qa or prod)";
 			}
 			
-			$zipRemotePath = "~/deploy/staging/{$zipfile}";
+			$zipRemotePath = "/home/oaeIT490/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/web/{$version}/{$zipfile}";
-			$targetPath = "~/var/www/sample/{$zipfile}";
+			$targetPath = "/var/www/sample/{$zipfile}";
 			
 			$localDir = dirname($zipLocalPath);
 			
@@ -131,7 +131,7 @@ function requestProcessor($request) {
 			if (!isset($request['destination'])) {
 				return "ERROR: Missing destination (qa or prod)";
 			}
-			$zipRemotePath = "~/deploy/staging/{$zipfile}";
+			$zipRemotePath = "/home/franklin/staging/{$zipfile}";
 			$zipLocalPath = "/home/yousef/deploy/staging/sql/{$version}/{$zipfile}";
 			$targetPath = "/srv/{$zipfile}";
 			
