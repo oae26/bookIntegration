@@ -1,13 +1,13 @@
 #!/usr/bin/php
 <?php
-require_once('/srv/path.inc');
-require_once('/srv/get_host_info.inc');
-require_once('/srv/newRabbitLib.inc');
+//require_once('/srv/path.inc');
+//require_once('/srv/get_host_info.inc');
+//require_once('/srv/rabbitMQLib.inc');
 
 //uncomment for local testing
-//require_once('../path.inc');
-//require_once('../get_host_info.inc');
-//require_once('../newRabbitLib.inc');
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
 
 $logFile = fopen("log.txt", "a");
 
@@ -29,7 +29,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("/rabbitmqini/rabbitMQ.ini","distlogging");
+$server = new rabbitMQServer("/rabbitmqini/rabbitMQ.ini","sqlLogging");
 $server->process_requests('requestProcessor');
 exit();
 
