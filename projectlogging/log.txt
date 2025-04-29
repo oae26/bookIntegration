@@ -41,3 +41,6 @@
 [2025-04-28T00:58:00+00:00][IT490-ubuntu] 1745801880this is a test message
 
 [2025-04-28T01:00:55+00:00][IT490-ubuntu] oooooohhyeahh
+[2025-04-29T17:49:29+00:00][IT490-ubuntu] Login Service Error
+[2025-04-29T17:52:36+00:00][IT490-ubuntu] Login Service Error
+[2025-04-29T17:54:20+00:00][IT490-ubuntu] Login Service Error
