@@ -1,6 +1,7 @@
 #!/usr/bin/php
 <?php
 require('projectlogging/logSender.php');
+require_once('/srv/rabbitMQLib.inc');
 $error = false;
 
 $output1 = shell_exec("systemctl is-active projectlogin.service");
@@ -36,8 +37,11 @@ if(trim($output6) != "active"){
 }
 
 if($error){
+	$request = array();
 	$client = new rabbitMQClient("/rabbitmqini/failover.ini",'sqlFail');
 	$request['type'] = "fail";
+	$response = $client->send_request($request);
+	//shell exec stop this chronjob, stop services, start listener
 	
 }
 
