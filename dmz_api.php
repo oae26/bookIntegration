@@ -62,12 +62,15 @@ function olAPISearch($username, $searchString){
 			//$bookAuthorsArray[] = $json['docs'][$field]['author_name'][0];
 			
 			//Do cover array
-			$bookCoversArray[] = $json['docs'][$field]['cover_edition_key'];
-			
+			if ($json['docs'][$field]['cover_edition_key'] == NULL){
+				$bookCoversArray[] = 1;
+			}else{
+				$bookCoversArray[] = $json['docs'][$field]['cover_edition_key'];
+			}
 			//Debug
-			//echo 'Key: '.$bookKeysArray[$field].PHP_EOL;
-			//echo 'Title: '.$bookTitlesArray[$field].PHP_EOL;
-			//echo 'Year: '.$bookYearsArray[$field].PHP_EOL;
+			echo 'Key: '.$bookKeysArray[$field].PHP_EOL;
+			echo 'Title: '.$bookTitlesArray[$field].PHP_EOL;
+			echo 'Year: '.$bookYearsArray[$field].PHP_EOL;
 			
 			
 		}
@@ -101,12 +104,12 @@ function requestProcessor($request)
 }
 
 // Replace emailServer with noBookAPI
-$server = new rabbitMQServer("rabbitMQ.ini","emailServer");
+$server = new rabbitMQServer("rabbitMQ.ini","noBookAPI");
 
-//echo "testRabbitMQServer BEGIN".PHP_EOL;
+echo "testRabbitMQServer BEGIN".PHP_EOL;
 
 //olAPISearch("testUser", "test my pack");
 $server->process_requests('requestProcessor'); // Comment this out if testing this solo
-//echo "testRabbitMQServer END".PHP_EOL;
+echo "testRabbitMQServer END".PHP_EOL;
 exit();
 ?>
