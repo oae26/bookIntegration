@@ -15,4 +15,6 @@ function sendLog($message){
 	$request['message'] = $log;
 	$client->logPublish($request);
 }
+
+sendLog("NEW MESSAGE!!! YEAAAH!!");
 ?>
