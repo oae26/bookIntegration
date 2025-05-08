@@ -64,7 +64,7 @@ while(true){
 			shell_exec("systemctl stop projectwatchlist.service");
 			
 			shell_exec("systemctl start sqlfaillistener.service");
-			shell_exec("systemctl stop sqlfailcheck.servive");
+			shell_exec("systemctl stop sqlfailcheck.service");
 			
 			exit();
 		}
