@@ -32,12 +32,47 @@ function olAPISearch($username, $searchString){
 	$options = [
 		'http' => [
 			'method' => "GET",
-			'header' => $header,
+			'header' => implode("\r\n",$header)
+		],
+		'ssl' => [
+			'verify_peer' => true,
+			'verify_peer_name' => true,
+			'allow_self_signed' => false,
+			'cafile' => "/etc/ssl/certs/ca-certificates.crt",
+			'capture_peer_cert' => true
 		]
 	];
 	
 	// Gets options ready for header
 	$context = stream_context_create($options);
+	
+	// Check if there are signs of MitM attacks
+	$certContext = stream_context_create([
+		'ssl' => ['capture_peer_cert' => true]
+	]);
+	
+	$socket = stream_socket_client(
+		"ssl://openlibrary.org:443",
+		$errno, $errstr, 30,
+		STREAM_CLIENT_CONNECT,
+		$certContext
+	);
+	
+	if (!$socket){
+		die("TLS handshake failed: $errstr ($errno)\n");
+	}
+	
+	$certParams = stream_context_get_params($socket);
+	$cert = $certParams['options']['ssl']['peer_certificate'];
+	$fingerprint = openssl_x509_fingerprint($cert, 'sha256');
+	$fingerprint = strtoupper(trim($fingerprint));
+	
+	$openlib_fingerprint = '0B2A5104622A3FFE0402A9A9AE31CD0C86E6BBE0AA333DBF5A5938A250C88183';
+	$openlib_fingerprint = strtoupper(trim($openlib_fingerprint));
+	
+	if ($fingerprint !== $openlib_fingerprint){
+		die("ERROR: Under attack by MitM.\nOpenlib: $openlib_fingerprint \nActual: $fingerprint\n");
+	}
 	
 	// Get Json file and run it
 	echo "Running API search for: ".$searchString.PHP_EOL;
