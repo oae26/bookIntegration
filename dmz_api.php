@@ -146,5 +146,5 @@ echo "testRabbitMQServer BEGIN".PHP_EOL;
 //olAPISearch("testUser", "test my pack");
 $server->process_requests('requestProcessor'); // Comment this out if testing this solo
 echo "testRabbitMQServer END".PHP_EOL;
-exit();
+exit(); 
 ?>
