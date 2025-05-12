@@ -72,7 +72,7 @@ function unzipDeployedFile($remoteUser, $remoteHost, $targetPath) {
 function detectFileType($zipfile) {
 	$baseName = pathinfo($zipfile, PATHINFO_FILENAME);
 	$fileType = strtoupper($baseName);
-	$allowTypes = ['PHP', 'HTML', 'CSS', 'JS', 'SQL', 'SQLDEPENDENCIES', 'SQLINI'];
+	$allowTypes = ['PHP', 'HTML', 'CSS', 'JS', 'SQL', 'SQLDEPENDENCIES', 'SQLINI', 'API', 'EMAIL'];
 	
 	if (in_array($fileType, $allowTypes)) {
 		return $fileType;
@@ -92,7 +92,7 @@ function requestProcessor($request) {
 	
 	$type = $request['type'];
 	$destination = $request['destination'];
-	$zipFile = $request['zipfile'];
+	$zipfile = $request['zipfile'];
 	$version = $request['version'];
 	
 	
@@ -108,7 +108,7 @@ function requestProcessor($request) {
 			$hostKey = "{$role}-{$source}";
 			$targetKey = "{$role}-{$destination}";
 			$user = 'oaeIT490';
-			$file_type = detectFileType($zipFile);
+			$file_type = detectFileType($zipfile);
 			
 			$sourceHost = parse_ini_file('clusterIPs.ini')[$hostKey];
 			$targetHost = parse_ini_file('clusterIPs.ini')[$targetKey];
@@ -119,9 +119,9 @@ function requestProcessor($request) {
 			
 			switch ($file_type) {
 				case 'HTML':
-					$zipRemotePath = "/home/oaeIT490/staging/html/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/web/html/{$version}/{$zipFile}";
-					$targetPath = "/var/www/sample/html/{$zipFile}";
+					$zipRemotePath = "/home/oaeIT490/staging/html/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/web/html/{$version}/{$zipfile}";
+					$targetPath = "/var/www/sample/html/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -135,9 +135,9 @@ function requestProcessor($request) {
 					unzipDeployedFile($user, $targetHost, $targetPath);
 					break;
 				case 'CSS':
-					$zipRemotePath = "/home/oaeIT490/staging/css/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/web/css/{$version}/{$zipFile}";
-					$targetPath = "/var/www/sample/css/{$zipFile}";
+					$zipRemotePath = "/home/oaeIT490/staging/css/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/web/css/{$version}/{$zipfile}";
+					$targetPath = "/var/www/sample/css/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -151,9 +151,9 @@ function requestProcessor($request) {
 					unzipDeployedFile($user, $targetHost, $targetPath);
 					break;
 				case 'PHP':
-					$zipRemotePath = "/home/oaeIT490/staging/php/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/web/php/{$version}/{$zipFile}";
-					$targetPath = "/var/www/sample/php/{$zipFile}";
+					$zipRemotePath = "/home/oaeIT490/staging/php/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/web/php/{$version}/{$zipfile}";
+					$targetPath = "/var/www/sample/php/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -167,9 +167,9 @@ function requestProcessor($request) {
 					unzipDeployedFile($user, $targetHost, $targetPath);
 					break;
 				case 'JS':
-					$zipRemotePath = "/home/oaeIT490/staging/js/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/web/js/{$version}/{$zipFile}";
-					$targetPath = "/var/www/sample/js/{$zipFile}";
+					$zipRemotePath = "/home/oaeIT490/staging/js/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/web/js/{$version}/{$zipfile}";
+					$targetPath = "/var/www/sample/js/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -199,7 +199,7 @@ function requestProcessor($request) {
 			$hostKey = "{$role}-{$source}";
 			$targetKey = "{$role}-{$destination}";
 			$user = 'franklin';
-			$file_type = detectFileType($zipFile);
+			$file_type = detectFileType($zipfile);
 			
 			$sourceHost = parse_ini_file('clusterIPs.ini')[$hostKey];
 			$targetHost = parse_ini_file('clusterIPs.ini')[$targetKey];
@@ -210,9 +210,9 @@ function requestProcessor($request) {
 			
 			switch ($file_type) {
 				case 'SQL':
-					$zipRemotePath = "/home/franklin/staging/sql/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/sql/{$version}/{$zipFile}";
-					$targetPath = "/srv/{$zipFile}";
+					$zipRemotePath = "/home/franklin/staging/sql/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/sql/{$version}/{$zipfile}";
+					$targetPath = "/srv/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -226,9 +226,9 @@ function requestProcessor($request) {
 					unzipDeployedFile($user, $targetHost, $targetPath);
 					break;
 				case 'SQLDEPENDENCIES':
-					$zipRemotePath = "/home/franklin/staging/sqldependencies/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/sql/sqldependencies/{$version}/{$zipFile}";
-					$targetPath = "/srv/{$zipFile}";
+					$zipRemotePath = "/home/franklin/staging/sqldependencies/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/sql/sqldependencies/{$version}/{$zipfile}";
+					$targetPath = "/srv/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -242,9 +242,9 @@ function requestProcessor($request) {
 					unzipDeployedFile($user, $targetHost, $targetPath);
 					break;
 				case 'SQLINI':
-					$zipRemotePath = "/home/franklin/staging/sqlini/{$zipFile}";
-					$zipLocalPath = "/home/yousef/deploy/staging/sql/sqlini/{$version}/{$zipFile}";
-					$targetPath = "/rabbitmqini/{$zipFile}";
+					$zipRemotePath = "/home/franklin/staging/sqlini/{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/sql/sqlini/{$version}/{$zipfile}";
+					$targetPath = "/rabbitmqini/{$zipfile}";
 					
 					$localDir = dirname($zipLocalPath);
 			
@@ -267,23 +267,14 @@ function requestProcessor($request) {
 			if (!isset($request['destination'])) {
 				return "ERROR: Missing destination (qa or prod)";
 			}
-			$zipRemotePath = "~/deploy/staging/{$zipFile}";
-			$zipLocalPath = "/home/yousef/deploy/staging/dmz/{$version}/{$zipFile}";
-			$targetPath = "/srv/{$zipFile}";
-			
-			$localDir = dirname($zipLocalPath);
-			
-			if (!is_dir($localDir)) {
-				echo "creating directory: $localDir" . PHP_EOL;
-				mkdir($localDir, 0775, true);
-			}
 			
 			$source = 'dev';
 			$role = $type;
 			$destination = $request['destination'];
 			$hostKey = "{$role}-{$source}";
 			$targetKey = "{$role}-{$destination}";
-			$user = 'yousef';
+			$user = 'nina';
+			$file_type = detectFileType($zipfile);
 			
 			$sourceHost = parse_ini_file('clusterIPs.ini')[$hostKey];
 			$targetHost = parse_ini_file('clusterIPs.ini')[$targetKey];
@@ -292,12 +283,45 @@ function requestProcessor($request) {
 				return "ERROR: Target host for '$hostKey' not found in clusterIPs.ini";
 			}
 			
-			scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
-			logDeployment($request);
-			scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
-
-			unzipDeployedFile($user, $targetHost, $targetPath);
 			
+			switch($file_type) {
+				case 'API':
+					$zipRemotePath = "/home/nina/staging/api{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/dmz/api{$version}/{$zipfile}";
+					$targetPath = "/srv/api/{$zipfile}";
+					
+					$localDir = dirname($zipLocalPath);
+			
+					if (!is_dir($localDir)) {
+						echo "creating directory: $localDir" . PHP_EOL;
+						mkdir($localDir, 0775, true);
+					}
+					
+					scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
+					scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
+					unzipDeployedFile($user, $targetHost, $targetPath);
+					break;
+				case 'EMAIL':
+					$zipRemotePath = "/home/nina/staging/email{$zipfile}";
+					$zipLocalPath = "/home/yousef/deploy/staging/dmz/email{$version}/{$zipfile}";
+					$targetPath = "/srv/{$zipfile}";
+					
+					$localDir = dirname($zipLocalPath);
+			
+					if (!is_dir($localDir)) {
+						echo "creating directory: $localDir" . PHP_EOL;
+						mkdir($localDir, 0775, true);
+					}
+					
+					scpFile($user, $sourceHost, $zipRemotePath, $zipLocalPath);
+					scpToCluster($zipLocalPath, $user, $targetHost, $targetPath);
+					unzipDeployedFile($user, $targetHost, $targetPath);
+					break;
+			
+			}
+			
+			logDeployment($request);
+
 			echo "Sent zip to $type node ($targetHost)" . PHP_EOL;
 			break;
 			

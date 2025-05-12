@@ -20,6 +20,12 @@ function scpFile ($remoteUser, $remoteHost, $remotePath, $localPath) {
 	
 }
 
+function unzipDeployedFile($remoteUser, $remoteHost, $targetPath) {
+	$cmd = "ssh {$remoteUser}@{$remoteHost} 'unzip -o {$targetPath} -d " .dirname($targetPath) . "'";
+	echo "Unzipping on remote: $cmd" . PHP_EOL;
+	return shell_exec($cmd);
+}
+
 function scpToCluster ($localPath, $remoteUser, $remoteHost, $remotePath) {
 
 	$cmd = "scp {$localPath} {$remoteUser}@{$remoteHost}:{$remotePath}";
@@ -38,19 +44,32 @@ switch($argv[1]){
 					case "PHP":
 						$remotePath = "/var/www/sample/php/";
 						$localPath = "/home/yousef/deploy/staging/web/php/".$argv[3]."/php.zip";
+						$targetPath = "/var/www/sample/php/php.zip";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $remotePath);
 						break;
 					case "HTML":
+						echo "html case started";
 						$remotePath = "/var/www/sample/html/";
 						$localPath = "/home/yousef/deploy/staging/web/html/".$argv[3]."/html.zip";
+						$targetPath = "/var/www/sample/html/html.zip";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $targetPath);
 						break;
 					case "CSS":
 						$remotePath = "/var/www/sample/css/";
 						$localPath = "/home/yousef/deploy/staging/web/css/".$argv[3]."/css.zip";
+						$targetPath = "/var/www/sample/css/css.zip";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $targetPath);
 						break;
 					
 					case "JS":
 						$remotePath = "/var/www/sample/js/";
 						$localPath = "/home/yousef/deploy/staging/web/js/".$argv[3]."/js.zip";
+						$targetPath = "/var/www/sample/js/js.zip";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $targetPath);
 						break;
 				}
 				break;
@@ -61,14 +80,23 @@ switch($argv[1]){
 					case "SQL":
 						$localPath = "/home/yousef/deploy/staging/sql/".$argv[3]."/sql.zip";
 						$remotePath = "/srv/";
+						$targetPath = "/srv/";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $targetPath);
 						break;
 					case "SQLDEPENDENCIES":
 						$localPath = "/home/yousef/deploy/staging/sql/sqldependencies/".$argv[3]."/sqldependencies.zip";
 						$remotePath = "/srv/";
+						$targetPath = "/srv/";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $targetPath);
 						break;
 					case "SQLINI":
 						$localPath = "/home/yousef/deploy/staging/sql/sqlini/".$argv[3]."/sqlini.zip";
 						$remotePath = "/rabbitmqini/";
+						$targetPath = "/srv/";
+						scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+						unzipDeployedFile($remoteUser, $remoteHost, $targetPath);
 						break;
 				}
 				break;
@@ -76,63 +104,16 @@ switch($argv[1]){
 				$remoteUser = "yousef";
 				$remoteHost = parse_ini_file('/home/yousef/git/bookIntegration/clusterListeners/clusterIPs.ini')["dmz-qa"];
 				$remotePath = "/srv";
-				$localPath = "/home/yousef/deploy/staging/dmz/".$argv[3]."/dmzBundle.zip";
-				break;
-		}
-		break;
-	case "prod":
-		switch($argv[2]){
-			case "web":
-				$remoteUser = "oaeIT490";
-				$remoteHost = parse_ini_file('/home/yousef/git/bookIntegration/clusterListeners/clusterIPs.ini')["web-prod"];
-				switch($argv[4]) {
-					case "PHP":
-						$remotePath = "/var/www/sample/php/";
-						$localPath = "/home/yousef/deploy/staging/web/php/".$argv[3]."/php.zip";
-						break;
-					case "HTML":
-						$remotePath = "/var/www/sample/html/";
-						$localPath = "/home/yousef/deploy/staging/web/html/".$argv[3]."/html.zip";
-						break;
-					case "CSS":
-						$remotePath = "/var/www/sample/css/";
-						$localPath = "/home/yousef/deploy/staging/web/css/".$argv[3]."/css.zip";
-						break;
-					
-					case "JS":
-						$remotePath = "/var/www/sample/js/";
-						$localPath = "/home/yousef/deploy/staging/web/js/".$argv[3]."/js.zip";
-						break;
-				}
-				break;
-			case "sql":
-				$remoteUser = "franklin";
-				$remoteHost = parse_ini_file('/home/yousef/git/bookIntegration/clusterListeners/clusterIPs.ini')["sql-prod"];
-				switch($argv[4]) {
-					case "SQL":
-						$localPath = "/home/yousef/deploy/staging/sql/".$argv[3]."/sql.zip";
-						$remotePath = "/srv/";
-						break;
-					case "SQLDEPENDENCIES":
-						$localPath = "/home/yousef/deploy/staging/sql/sqldependencies/".$argv[3]."/sqldependencies.zip";
-						$remotePath = "/srv/";
-						break;
-					case "SQLINI":
-						$localPath = "/home/yousef/deploy/staging/sql/sqlini/".$argv[3]."/sqlini.zip";
-						$remotePath = "/rabbitmqini/";
-						break;
-				}
-				break;
-			case "dmz":
-				$remoteUser = "yousef";
-				$remoteHost = parse_ini_file('/home/yousef/git/bookIntegration/clusterListeners/clusterIPs.ini')["dmz-prod"];
-				$remotePath = "/srv";
 
 				$localPath = "/home/yousef/deploy/staging/dmz/".$argv[3]."/dmzBundle.zip";
+				
+				scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+				unzipDeployedFile($remoteUser, $remoteHost, $remotePath);
 				break;
 		}
+	
 }
 
 //scp the file, adjustments MAY need to be made
-scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
+//scpToCluster($localPath, $remoteUser, $remoteHost, $remotePath);
 ?>
