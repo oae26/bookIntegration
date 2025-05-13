@@ -1,0 +1,36 @@
+*{
+    margin:0;
+    
+    box-sizing: border-box;
+}
+body{
+
+    
+    display:block;
+    align-items:center;
+    text-align: center;
+    padding: 70px;
+    
+    
+}
+#bookCover{
+    height: 500px;
+    width: 500px;
+}
+.bookHeader{
+
+    align-items:center;
+    position: top;
+
+}
+.stars i{
+    color: gray;
+    font-size: 35px;
+    cursor:pointer;
+    transition: color 0.2s ease-in;
+}
+.stars i.active{
+    fill:gold;
+    color:gold;
+
+}
