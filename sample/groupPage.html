@@ -1,0 +1,29 @@
+<html>
+<body>
+<form>
+<label for="groupName">Enter a group name here</label>
+<input id="groupName" type="text" placeholder="name your reading group!">
+<input type="submit" id="groupCreation">
+<label for="groupMember">Enter your group members</label>
+<input id="groupMember" placeholder="group member...">
+<input type="submit" id="groupMembers">
+
+</form>
+<h2>Your Groups</h2>
+    <table id="groupTable" border="1">
+        <tr>
+            <th>Group ID</th>
+            <th>Group Name</th>
+            <th>Owner ID</th>
+            <th >Book ID </th>
+            <th >Pages Read</th>
+            <th >Due Date </th>
+            <th><label>Recruit a User!</label><input type="text" id="recruitUser">
+                <button id="addUser">add user</button></th>
+        </tr>
+    </table>
+
+</body>
+
+<script src="./groupService.js"></script>
+</html>

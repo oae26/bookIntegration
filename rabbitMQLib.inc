@@ -181,8 +181,8 @@ class rabbitMQClient
 		$uid = $response->getCorrelationId();
 		if (!isset($this->response_queue[$uid]))
 		{
-		  echo  "unknown uid\n";
-		  return true;
+			echo  "unknown uid\n";
+			return true;
 		}
     		$this->conn_queue->ack($response->getDeliveryTag());
 		$body = $response->getBody();
@@ -244,7 +244,7 @@ class rabbitMQClient
 		}
 	}
 
-	/**
+	/*
 	  @brief send a one-way message to the server.  These are
 	  auto-acknowledged and give no response.
 
@@ -308,4 +308,3 @@ class rabbitMQClient
 	}
 }
 ?>
-

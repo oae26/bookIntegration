@@ -1,0 +1,43 @@
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+
+<link rel="stylesheet" href="library.css">
+
+<h1>Home </h1>
+<body>
+Welcome to the home page!
+<div >
+<button id="logoutButton">logout</button>
+<button id="validateButton" >validate</button>
+<div id="textResponse"></div>
+<br>
+<label for="searchBar">Search </label>
+<input id="searchBar" type="search" placeholder="search for a book here!">
+<button id="searchButton">Search</button>
+<div id="output">
+
+</div>
+<a href="groupPage.html"> Create a group</a>
+
+</div>
+<br>
+<label for="genre"> Look for Upcoming Releases by Genre</label>
+<br>
+<select name="genre" id="genres">
+    <option>Fiction</option>
+    <option>History</option>
+    <option>Romance</option>
+    <option>Suspense</option>
+    <option>Business</option>
+</select>
+<div id="upcomingBooks">
+  
+</div>
+<a href="watchList.html"> Check your Watchlist</a>
+
+
+<script src="./authentication.js" type="module">
+</script>
+<script src="./bookSearch.js">
+</script>
+</body>
+</html>
