@@ -15,4 +15,5 @@ function sendLog($message){
 	$request['message'] = $log;
 	$client->logPublish($request);
 }
+sendLog("Hello professor.");
 ?>
