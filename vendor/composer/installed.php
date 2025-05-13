@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '179eafa9e5d9157cbe3c379aed879682be8df5fe',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '179eafa9e5d9157cbe3c379aed879682be8df5fe',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'robthree/twofactorauth' => array(
+            'pretty_version' => 'v3.0.2',
+            'version' => '3.0.2.0',
+            'reference' => '6d70f9ca8e25568f163a7b3b3ff77bd8ea743978',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../robthree/twofactorauth',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'videlalvaro/php-amqplib' => array(
+            'pretty_version' => 'v2.5.2',
+            'version' => '2.5.2.0',
+            'reference' => 'eb8f94d97c8e79900accf77343dbd7eca7f58506',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../videlalvaro/php-amqplib',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

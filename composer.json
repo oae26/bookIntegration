@@ -1,5 +1,6 @@
 {
   "require": {
-      "videlalvaro/php-amqplib": "2.5.*"
+      "videlalvaro/php-amqplib": "2.5.*",
+    "robthree/twofactorauth": "^3.0"
   }
 }
